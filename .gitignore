@@ -1,0 +1,13 @@
+# Local resources and references (ignored from GitHub)
+resources/
+resources/*
+
+# Operating system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor and temporary files
+*.log
+.vscode/
+.idea/

@@ -79,7 +79,7 @@
   <main class="flex-1 w-full pt-24 overflow-y-auto">
 
     <!-- VIEW 1A: GRID VIEW -->
-    <section id="viewGrid" class="block pb-12 px-4 max-w-md mx-auto">
+    <section id="viewGrid" class="block pb-28 px-4 max-w-md mx-auto">
       <div class="flex flex-col w-full gap-4">
         <div class="flex items-center justify-center gap-2 w-full select-none" id="telemetryBar">
           <div class="flex-1 py-1.5 rounded-lg bg-[#fbc02d] text-[#1a1a1a] font-bold text-xs text-center shadow-sm"
@@ -97,7 +97,7 @@
     </section>
 
     <!-- VIEW 1B: LIST VIEW -->
-    <section id="viewList" class="hidden pb-12 px-4 max-w-md mx-auto">
+    <section id="viewList" class="hidden pb-28 px-4 max-w-md mx-auto">
       <div class="flex flex-col w-full gap-3">
         <!-- Accordion 1: Out on Job -->
         <div class="flex flex-col rounded-xl bg-[#f5f3f3] border border-[#e9e8e7] overflow-hidden">
@@ -217,6 +217,86 @@
     </section>
 
   </main>
+
+  <!-- ==================== TIMELINE FOOTER (FIXED BOTTOM) ==================== -->
+  <footer id="timelineFooter"
+    class="fixed bottom-0 inset-x-0 z-40 bg-[#fbf9f9]/95 backdrop-blur-md border-t border-[#e9e8e7] px-3 pt-2.5 pb-[max(0.6rem,env(safe-area-inset-bottom))] shadow-lg select-none">
+    <div class="max-w-md mx-auto grid grid-cols-[38px_1fr_38px] gap-2 items-stretch">
+
+      <!-- Previous Week Button (Tall 2-measure span) -->
+      <button type="button" id="btnPrevWeek" onclick="handleMockWeekChange(-1)"
+        class="h-full bg-[#efeded] hover:bg-[#e3e2e2] active:scale-95 text-[#5d403b] rounded-xl flex items-center justify-center transition-all cursor-pointer border border-[#e9e8e7]/60 shadow-sm"
+        title="Previous Week" aria-label="Previous Week">
+        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+          <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+        </svg>
+      </button>
+
+      <!-- Center Content: Row 1 (7 Days) + Row 2 (Month & CW info) -->
+      <div class="flex flex-col gap-1.5 justify-center">
+
+        <!-- Row 1: 7 Weekday Buttons -->
+        <div class="grid grid-cols-7 gap-1 w-full" id="timelineDaysContainer">
+          <button type="button" onclick="selectMockDay(this)"
+            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg bg-[#efeded] hover:bg-[#e3e2e2] text-[#5d403b] active:scale-95 transition-all cursor-pointer">
+            <span class="text-[9px] font-bold uppercase tracking-wider opacity-60">Mo</span>
+            <span class="text-xs font-bold leading-tight">03</span>
+          </button>
+          <button type="button" onclick="selectMockDay(this)"
+            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg bg-[#efeded] hover:bg-[#e3e2e2] text-[#5d403b] active:scale-95 transition-all cursor-pointer">
+            <span class="text-[9px] font-bold uppercase tracking-wider opacity-60">Di</span>
+            <span class="text-xs font-bold leading-tight">04</span>
+          </button>
+          <!-- Wednesday (Initial Active Day) -->
+          <button type="button" onclick="selectMockDay(this)"
+            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg bg-[#5d403b] text-white shadow-sm active:scale-95 transition-all cursor-pointer ring-1 ring-[#5d403b]">
+            <span class="text-[9px] font-bold uppercase tracking-wider opacity-90">Mi</span>
+            <span class="text-xs font-bold leading-tight">05</span>
+          </button>
+          <button type="button" onclick="selectMockDay(this)"
+            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg bg-[#efeded] hover:bg-[#e3e2e2] text-[#5d403b] active:scale-95 transition-all cursor-pointer">
+            <span class="text-[9px] font-bold uppercase tracking-wider opacity-60">Do</span>
+            <span class="text-xs font-bold leading-tight">06</span>
+          </button>
+          <button type="button" onclick="selectMockDay(this)"
+            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg bg-[#efeded] hover:bg-[#e3e2e2] text-[#5d403b] active:scale-95 transition-all cursor-pointer">
+            <span class="text-[9px] font-bold uppercase tracking-wider opacity-60">Fr</span>
+            <span class="text-xs font-bold leading-tight">07</span>
+          </button>
+          <button type="button" onclick="selectMockDay(this)"
+            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg bg-[#efeded]/60 hover:bg-[#e3e2e2] text-[#5d403b]/80 active:scale-95 transition-all cursor-pointer">
+            <span class="text-[9px] font-bold uppercase tracking-wider opacity-50">Sa</span>
+            <span class="text-xs font-bold leading-tight">08</span>
+          </button>
+          <button type="button" onclick="selectMockDay(this)"
+            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg bg-[#efeded]/60 hover:bg-[#e3e2e2] text-[#5d403b]/80 active:scale-95 transition-all cursor-pointer">
+            <span class="text-[9px] font-bold uppercase tracking-wider opacity-50">So</span>
+            <span class="text-xs font-bold leading-tight">09</span>
+          </button>
+        </div>
+
+        <!-- Row 2: Month, Year, and Calendar Week (CW) Metadata -->
+        <div class="flex items-center justify-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-[#5d403b]/70">
+          <span id="timelineMonthLabel">NOV</span>
+          <span class="opacity-40">•</span>
+          <span id="timelineYearLabel">2026</span>
+          <span class="opacity-40">•</span>
+          <span id="timelineCwLabel" class="bg-[#efeded] px-1.5 py-0.5 rounded text-[9px] text-[#5d403b]">CW #45</span>
+        </div>
+
+      </div>
+
+      <!-- Next Week Button (Tall 2-measure span) -->
+      <button type="button" id="btnNextWeek" onclick="handleMockWeekChange(1)"
+        class="h-full bg-[#efeded] hover:bg-[#e3e2e2] active:scale-95 text-[#5d403b] rounded-xl flex items-center justify-center transition-all cursor-pointer border border-[#e9e8e7]/60 shadow-sm"
+        title="Next Week" aria-label="Next Week">
+        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+          <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+        </svg>
+      </button>
+
+    </div>
+  </footer>
 
   <!-- ==================== FLOATING ACTION BUTTONS (Z-50 OVERLAY) ==================== -->
   <aside id="setupFABs" class="fixed bottom-6 right-6 z-50 hidden flex flex-col items-center gap-3 pointer-events-auto">
@@ -412,6 +492,15 @@
       const subHeaderTitle = document.getElementById("subHeaderTitle");
 
       setupFABs.classList.add("hidden");
+
+      const timelineFooter = document.getElementById("timelineFooter");
+      if (timelineFooter) {
+        if (viewName === "grid" || viewName === "list") {
+          timelineFooter.classList.remove("hidden");
+        } else {
+          timelineFooter.classList.add("hidden");
+        }
+      }
 
       if (viewName === "grid" || viewName === "list") {
         navMain.classList.remove("hidden");
@@ -1308,6 +1397,28 @@
         renderSetupView();
         closeTransferModal();
       }
+    }
+
+    // Mock UI Timeline Interactions (Prototype)
+    let mockCwNumber = 45;
+    function selectMockDay(selectedBtn) {
+      document.querySelectorAll(".timeline-day-btn").forEach(btn => {
+        btn.className = "timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg bg-[#efeded] hover:bg-[#e3e2e2] text-[#5d403b] active:scale-95 transition-all cursor-pointer";
+        const dayLabel = btn.querySelector("span:first-child");
+        if (dayLabel) dayLabel.className = "text-[9px] font-bold uppercase tracking-wider opacity-60";
+      });
+      selectedBtn.className = "timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg bg-[#5d403b] text-white shadow-sm active:scale-95 transition-all cursor-pointer ring-1 ring-[#5d403b]";
+      const activeLabel = selectedBtn.querySelector("span:first-child");
+      if (activeLabel) activeLabel.className = "text-[9px] font-bold uppercase tracking-wider opacity-90";
+    }
+
+    function handleMockWeekChange(delta) {
+      mockCwNumber += delta;
+      if (mockCwNumber < 1) mockCwNumber = 52;
+      if (mockCwNumber > 52) mockCwNumber = 1;
+      const pad = mockCwNumber < 10 ? `0${mockCwNumber}` : `${mockCwNumber}`;
+      const label = document.getElementById("timelineCwLabel");
+      if (label) label.textContent = `CW #${pad}`;
     }
 
     // Startup View

@@ -225,7 +225,7 @@
 
       <!-- Previous Week Button (Tall 2-measure span) -->
       <button type="button" id="btnPrevWeek" onclick="handleMockWeekChange(-1)"
-        class="h-full bg-[#efeded] hover:bg-[#e3e2e2] active:scale-95 text-[#5d403b] rounded-xl flex items-center justify-center transition-all cursor-pointer border border-[#e9e8e7]/60 shadow-sm"
+        class="h-full bg-[#5d403b] hover:bg-[#4a332f] active:scale-95 text-white rounded-xl flex items-center justify-center transition-all cursor-pointer shadow-sm border border-[#5d403b]"
         title="Previous Week" aria-label="Previous Week">
         <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
           <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
@@ -249,9 +249,9 @@
           </button>
           <!-- Wednesday (Initial Active Day) -->
           <button type="button" onclick="selectMockDay(this)"
-            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg bg-[#5d403b] text-white shadow-sm active:scale-95 transition-all cursor-pointer ring-1 ring-[#5d403b]">
-            <span class="text-[9px] font-bold uppercase tracking-wider opacity-90">Mi</span>
-            <span class="text-xs font-bold leading-tight">05</span>
+            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg bg-white text-[#b80000] shadow-sm active:scale-95 transition-all cursor-pointer ring-1 ring-[#e9e8e7]">
+            <span class="text-[9px] font-bold uppercase tracking-wider text-[#b80000]">Mi</span>
+            <span class="text-xs font-bold leading-tight text-[#b80000]">05</span>
           </button>
           <button type="button" onclick="selectMockDay(this)"
             class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg bg-[#efeded] hover:bg-[#e3e2e2] text-[#5d403b] active:scale-95 transition-all cursor-pointer">
@@ -276,19 +276,19 @@
         </div>
 
         <!-- Row 2: Month, Year, and Calendar Week (CW) Metadata -->
-        <div class="flex items-center justify-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-[#5d403b]/70">
+        <div class="flex items-center justify-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-[#1b1c1c]">
           <span id="timelineMonthLabel">NOV</span>
-          <span class="opacity-40">•</span>
+          <span class="opacity-30">•</span>
           <span id="timelineYearLabel">2026</span>
-          <span class="opacity-40">•</span>
-          <span id="timelineCwLabel" class="bg-[#efeded] px-1.5 py-0.5 rounded text-[9px] text-[#5d403b]">CW #45</span>
+          <span class="opacity-30">•</span>
+          <span id="timelineCwLabel">CW #45</span>
         </div>
 
       </div>
 
       <!-- Next Week Button (Tall 2-measure span) -->
       <button type="button" id="btnNextWeek" onclick="handleMockWeekChange(1)"
-        class="h-full bg-[#efeded] hover:bg-[#e3e2e2] active:scale-95 text-[#5d403b] rounded-xl flex items-center justify-center transition-all cursor-pointer border border-[#e9e8e7]/60 shadow-sm"
+        class="h-full bg-[#5d403b] hover:bg-[#4a332f] active:scale-95 text-white rounded-xl flex items-center justify-center transition-all cursor-pointer shadow-sm border border-[#5d403b]"
         title="Next Week" aria-label="Next Week">
         <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
           <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
@@ -1405,11 +1405,15 @@
       document.querySelectorAll(".timeline-day-btn").forEach(btn => {
         btn.className = "timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg bg-[#efeded] hover:bg-[#e3e2e2] text-[#5d403b] active:scale-95 transition-all cursor-pointer";
         const dayLabel = btn.querySelector("span:first-child");
-        if (dayLabel) dayLabel.className = "text-[9px] font-bold uppercase tracking-wider opacity-60";
+        if (dayLabel) dayLabel.className = "text-[9px] font-bold uppercase tracking-wider opacity-60 text-[#5d403b]";
+        const dateNum = btn.querySelector("span:last-child");
+        if (dateNum) dateNum.className = "text-xs font-bold leading-tight text-[#5d403b]";
       });
-      selectedBtn.className = "timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg bg-[#5d403b] text-white shadow-sm active:scale-95 transition-all cursor-pointer ring-1 ring-[#5d403b]";
+      selectedBtn.className = "timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg bg-white text-[#b80000] shadow-sm active:scale-95 transition-all cursor-pointer ring-1 ring-[#e9e8e7]";
       const activeLabel = selectedBtn.querySelector("span:first-child");
-      if (activeLabel) activeLabel.className = "text-[9px] font-bold uppercase tracking-wider opacity-90";
+      if (activeLabel) activeLabel.className = "text-[9px] font-bold uppercase tracking-wider text-[#b80000]";
+      const activeNum = selectedBtn.querySelector("span:last-child");
+      if (activeNum) activeNum.className = "text-xs font-bold leading-tight text-[#b80000]";
     }
 
     function handleMockWeekChange(delta) {

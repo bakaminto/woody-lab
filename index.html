@@ -235,43 +235,43 @@
       <!-- Center Content: Row 1 (7 Days) + Row 2 (Month & CW info) -->
       <div class="flex flex-col gap-1.5 justify-center">
 
-        <!-- Row 1: 7 Weekday Buttons -->
-        <div class="grid grid-cols-7 gap-1 w-full" id="timelineDaysContainer">
+        <!-- Row 1: 7 Weekday Buttons (Unified Pill Toggle Track) -->
+        <div class="bg-[#efeded] p-1 rounded-xl grid grid-cols-7 gap-0.5 w-full items-center" id="timelineDaysContainer">
           <button type="button" onclick="selectMockDay(this)"
-            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg bg-[#efeded] hover:bg-[#e3e2e2] text-[#5d403b] active:scale-95 transition-all cursor-pointer">
+            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg text-[#5d403b] hover:text-[#1b1c1c] active:scale-95 transition-all cursor-pointer">
             <span class="text-[9px] font-bold uppercase tracking-wider opacity-60">Mo</span>
-            <span class="text-xs font-bold leading-tight">03</span>
+            <span class="text-xs font-semibold leading-tight">03</span>
           </button>
           <button type="button" onclick="selectMockDay(this)"
-            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg bg-[#efeded] hover:bg-[#e3e2e2] text-[#5d403b] active:scale-95 transition-all cursor-pointer">
+            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg text-[#5d403b] hover:text-[#1b1c1c] active:scale-95 transition-all cursor-pointer">
             <span class="text-[9px] font-bold uppercase tracking-wider opacity-60">Di</span>
-            <span class="text-xs font-bold leading-tight">04</span>
+            <span class="text-xs font-semibold leading-tight">04</span>
           </button>
           <!-- Wednesday (Initial Active Day) -->
           <button type="button" onclick="selectMockDay(this)"
-            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg bg-white text-[#b80000] shadow-sm active:scale-95 transition-all cursor-pointer ring-1 ring-[#e9e8e7]">
+            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg bg-white text-[#b80000] shadow-sm active:scale-95 transition-all cursor-pointer">
             <span class="text-[9px] font-bold uppercase tracking-wider text-[#b80000]">Mi</span>
             <span class="text-xs font-bold leading-tight text-[#b80000]">05</span>
           </button>
           <button type="button" onclick="selectMockDay(this)"
-            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg bg-[#efeded] hover:bg-[#e3e2e2] text-[#5d403b] active:scale-95 transition-all cursor-pointer">
+            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg text-[#5d403b] hover:text-[#1b1c1c] active:scale-95 transition-all cursor-pointer">
             <span class="text-[9px] font-bold uppercase tracking-wider opacity-60">Do</span>
-            <span class="text-xs font-bold leading-tight">06</span>
+            <span class="text-xs font-semibold leading-tight">06</span>
           </button>
           <button type="button" onclick="selectMockDay(this)"
-            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg bg-[#efeded] hover:bg-[#e3e2e2] text-[#5d403b] active:scale-95 transition-all cursor-pointer">
+            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg text-[#5d403b] hover:text-[#1b1c1c] active:scale-95 transition-all cursor-pointer">
             <span class="text-[9px] font-bold uppercase tracking-wider opacity-60">Fr</span>
-            <span class="text-xs font-bold leading-tight">07</span>
+            <span class="text-xs font-semibold leading-tight">07</span>
           </button>
           <button type="button" onclick="selectMockDay(this)"
-            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg bg-[#efeded]/60 hover:bg-[#e3e2e2] text-[#5d403b]/80 active:scale-95 transition-all cursor-pointer">
+            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg text-[#5d403b]/70 hover:text-[#1b1c1c] active:scale-95 transition-all cursor-pointer">
             <span class="text-[9px] font-bold uppercase tracking-wider opacity-50">Sa</span>
-            <span class="text-xs font-bold leading-tight">08</span>
+            <span class="text-xs font-semibold leading-tight">08</span>
           </button>
           <button type="button" onclick="selectMockDay(this)"
-            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg bg-[#efeded]/60 hover:bg-[#e3e2e2] text-[#5d403b]/80 active:scale-95 transition-all cursor-pointer">
+            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg text-[#5d403b]/70 hover:text-[#1b1c1c] active:scale-95 transition-all cursor-pointer">
             <span class="text-[9px] font-bold uppercase tracking-wider opacity-50">So</span>
-            <span class="text-xs font-bold leading-tight">09</span>
+            <span class="text-xs font-semibold leading-tight">09</span>
           </button>
         </div>
 
@@ -1403,13 +1403,13 @@
     let mockCwNumber = 45;
     function selectMockDay(selectedBtn) {
       document.querySelectorAll(".timeline-day-btn").forEach(btn => {
-        btn.className = "timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg bg-[#efeded] hover:bg-[#e3e2e2] text-[#5d403b] active:scale-95 transition-all cursor-pointer";
+        btn.className = "timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg text-[#5d403b] hover:text-[#1b1c1c] active:scale-95 transition-all cursor-pointer";
         const dayLabel = btn.querySelector("span:first-child");
-        if (dayLabel) dayLabel.className = "text-[9px] font-bold uppercase tracking-wider opacity-60 text-[#5d403b]";
+        if (dayLabel) dayLabel.className = "text-[9px] font-bold uppercase tracking-wider opacity-60";
         const dateNum = btn.querySelector("span:last-child");
-        if (dateNum) dateNum.className = "text-xs font-bold leading-tight text-[#5d403b]";
+        if (dateNum) dateNum.className = "text-xs font-semibold leading-tight";
       });
-      selectedBtn.className = "timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg bg-white text-[#b80000] shadow-sm active:scale-95 transition-all cursor-pointer ring-1 ring-[#e9e8e7]";
+      selectedBtn.className = "timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg bg-white text-[#b80000] shadow-sm active:scale-95 transition-all cursor-pointer";
       const activeLabel = selectedBtn.querySelector("span:first-child");
       if (activeLabel) activeLabel.className = "text-[9px] font-bold uppercase tracking-wider text-[#b80000]";
       const activeNum = selectedBtn.querySelector("span:last-child");

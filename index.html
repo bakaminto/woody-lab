@@ -587,7 +587,7 @@
         if (!dev.is_active) {
           inactiveCount++;
           const inactiveCell = document.createElement("div");
-          inactiveCell.className = "flex flex-col items-center justify-center w-14 h-14 rounded-2xl bg-[#dbdad9] text-[#1b1c1c] shadow-sm select-none cursor-default opacity-85";
+          inactiveCell.className = "flex flex-col items-center justify-center w-14 h-14 rounded-2xl bg-[#dbdad9] text-[#1b1c1c] shadow-sm select-none cursor-default";
           inactiveCell.innerHTML = `<span class="font-bold text-xs leading-tight">${dev.label}</span><span class="text-[9px] font-semibold opacity-70 mt-0.5">${slot.slot_tag}</span>`;
           container.appendChild(inactiveCell);
         } else if (dev.status === "out") {

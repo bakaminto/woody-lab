@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -23,9 +23,16 @@
     rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    html,
+    body {
+      height: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      overscroll-behavior: none;
+    }
+
     body {
       font-family: 'Inter', sans-serif;
-      overscroll-behavior: none;
     }
 
     .font-code {
@@ -34,14 +41,14 @@
   </style>
 </head>
 
-<body class="bg-[#fbf9f9] text-[#1b1c1c] flex flex-col min-h-screen select-none relative">
+<body class="bg-[#fbf9f9] text-[#1b1c1c] flex flex-col h-full h-[100dvh] overflow-hidden select-none relative">
 
   <!-- ==================== GLOBAL APP BAR ==================== -->
   <header class="fixed top-0 w-full z-40 bg-[#fbf9f9]/90 backdrop-blur-xl border-b border-[#e9e8e7]">
     <div class="h-6"></div>
     <div class="px-4 pb-3 pt-1 max-w-md mx-auto w-full flex flex-col gap-2.5">
       <!-- Main Navigation Toggle (Grid / List Views) -->
-      <div id="navMain" class="flex flex-col gap-2.5 w-full">
+      <div id="navMain" class="flex flex-col gap-6 w-full">
         <div class="relative flex items-center justify-center w-full">
         <div class="bg-[#efeded] p-1 rounded-xl flex items-center">
           <button type="button" id="tabList" onclick="switchView('list')"
@@ -88,10 +95,10 @@
   </header>
 
   <!-- ==================== ROOT VIEWS CONTAINER ==================== -->
-  <main class="flex-1 w-full pt-36 overflow-y-auto">
+  <main class="flex-1 w-full pt-44 overflow-y-auto overscroll-contain">
 
     <!-- VIEW 1A: GRID VIEW -->
-    <section id="viewGrid" class="block pb-28 px-4 max-w-md mx-auto">
+    <section id="viewGrid" class="block pb-36 px-4 max-w-md mx-auto">
       <div class="flex flex-col w-full gap-4">
         <div class="bg-[#f5f3f3] p-4 rounded-2xl shadow-sm border border-[#e9e8e7]">
           <div class="grid grid-cols-5 gap-2.5 justify-items-center w-full" id="gridContainer"></div>
@@ -100,7 +107,7 @@
     </section>
 
     <!-- VIEW 1B: LIST VIEW -->
-    <section id="viewList" class="hidden pb-28 px-4 max-w-md mx-auto">
+    <section id="viewList" class="hidden pb-36 px-4 max-w-md mx-auto">
       <div class="flex flex-col w-full gap-3">
         <!-- Accordion 1: Out on Job -->
         <div class="flex flex-col rounded-xl bg-[#f5f3f3] border border-[#e9e8e7] overflow-hidden">
@@ -223,7 +230,7 @@
 
   <!-- ==================== TIMELINE FOOTER (FIXED BOTTOM) ==================== -->
   <footer id="timelineFooter"
-    class="fixed bottom-0 inset-x-0 z-40 bg-[#fbf9f9]/95 backdrop-blur-md border-t border-[#e9e8e7] px-3 pt-2.5 pb-[max(0.6rem,env(safe-area-inset-bottom))] shadow-lg select-none">
+    class="fixed bottom-0 inset-x-0 z-40 bg-[#fbf9f9]/95 backdrop-blur-md border-t border-[#e9e8e7] px-3 pt-2.5 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))] shadow-lg select-none">
     <div class="max-w-md mx-auto grid grid-cols-[38px_1fr_38px] gap-2 items-stretch">
 
       <!-- Previous Week Button (Tall 2-measure span) -->

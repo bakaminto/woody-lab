@@ -95,10 +95,10 @@
   </header>
 
   <!-- ==================== ROOT VIEWS CONTAINER ==================== -->
-  <main class="flex-1 w-full pt-44 overflow-y-auto overscroll-contain">
+  <main class="flex-1 w-full pt-[140px] overflow-y-auto overscroll-contain">
 
     <!-- VIEW 1A: GRID VIEW -->
-    <section id="viewGrid" class="block pb-36 px-4 max-w-md mx-auto">
+    <section id="viewGrid" class="block pb-[calc(106px+env(safe-area-inset-bottom,0px))] px-4 max-w-md mx-auto">
       <div class="flex flex-col w-full gap-4">
         <div class="bg-[#f5f3f3] p-4 rounded-2xl shadow-sm border border-[#e9e8e7]">
           <div class="grid grid-cols-5 gap-2.5 justify-items-center w-full" id="gridContainer"></div>
@@ -107,7 +107,7 @@
     </section>
 
     <!-- VIEW 1B: LIST VIEW -->
-    <section id="viewList" class="hidden pb-36 px-4 max-w-md mx-auto">
+    <section id="viewList" class="hidden pb-[calc(106px+env(safe-area-inset-bottom,0px))] px-4 max-w-md mx-auto">
       <div class="flex flex-col w-full gap-3">
         <!-- Accordion 1: Out on Job -->
         <div class="flex flex-col rounded-xl bg-[#f5f3f3] border border-[#e9e8e7] overflow-hidden">

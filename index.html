@@ -1582,29 +1582,29 @@
           const dateDisplay = cellDate.getDate() < 10 ? `0${cellDate.getDate()}` : `${cellDate.getDate()}`;
 
           // Middle date band: wide pill (maximum width without touching day tile borders)
-          let datePillClass = "text-[#1b1c1c] font-bold";
+          let datePillClass = "text-[#1b1c1c]";
           if (isSelected) {
-            datePillClass = "bg-[#b80000] text-white font-bold rounded-full shadow-xs";
+            datePillClass = "bg-[#b80000] text-white rounded-full shadow-xs";
           }
 
           cell.innerHTML = `
             <!-- Top: 3-digit width Yellow pill (Out count) -->
             <div class="flex items-center justify-center w-full">
-              <span class="w-7 py-0.5 rounded-full bg-[#fbc02d] text-[#1a1a1a] font-bold text-[10px] leading-none text-center shadow-xs flex items-center justify-center">
+              <span class="w-8 py-0.5 rounded-full bg-[#fbc02d] text-[#1a1a1a] font-bold text-xs leading-none text-center shadow-xs flex items-center justify-center">
                 ${mockOut}
               </span>
             </div>
 
             <!-- Middle: Wide Date pill (doesn't touch borders) -->
             <div class="flex items-center justify-center w-full px-1">
-              <span class="w-full py-0.5 text-xs leading-tight text-center ${datePillClass}">
+              <span class="w-full py-0.5 text-xs font-bold leading-tight text-center ${datePillClass}">
                 ${dateDisplay}
               </span>
             </div>
 
             <!-- Bottom: 3-digit width Green pill (Office count) -->
             <div class="flex items-center justify-center w-full">
-              <span class="w-7 py-0.5 rounded-full bg-[#2e7d32] text-white font-bold text-[10px] leading-none text-center shadow-xs flex items-center justify-center">
+              <span class="w-8 py-0.5 rounded-full bg-[#2e7d32] text-white font-bold text-xs leading-none text-center shadow-xs flex items-center justify-center">
                 ${mockOffice}
               </span>
             </div>

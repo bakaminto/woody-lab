@@ -1581,28 +1581,30 @@
           // Format date as 2 digits
           const dateDisplay = cellDate.getDate() < 10 ? `0${cellDate.getDate()}` : `${cellDate.getDate()}`;
 
-          // Middle date band: full-width, solid crimson ribbon with white text if selected
-          let middleRowClass = "text-[#1b1c1c] font-bold";
+          // Middle date band: wide pill (maximum width without touching day tile borders)
+          let datePillClass = "text-[#1b1c1c] font-bold";
           if (isSelected) {
-            middleRowClass = "bg-[#b80000] text-white font-bold py-0.5 shadow-xs";
+            datePillClass = "bg-[#b80000] text-white font-bold rounded-full shadow-xs";
           }
 
           cell.innerHTML = `
-            <!-- Top: Narrow Yellow chip (Out count) -->
+            <!-- Top: 3-digit width Yellow pill (Out count) -->
             <div class="flex items-center justify-center w-full">
-              <span class="px-1.5 py-0.5 rounded-md bg-[#fbc02d] text-[#1a1a1a] font-bold text-[10px] leading-none min-w-[20px] text-center shadow-xs">
+              <span class="w-7 py-0.5 rounded-full bg-[#fbc02d] text-[#1a1a1a] font-bold text-[10px] leading-none text-center shadow-xs flex items-center justify-center">
                 ${mockOut}
               </span>
             </div>
 
-            <!-- Middle: Full-width Date row -->
-            <div class="w-full text-center text-xs leading-none ${middleRowClass}">
-              ${dateDisplay}
+            <!-- Middle: Wide Date pill (doesn't touch borders) -->
+            <div class="flex items-center justify-center w-full px-1">
+              <span class="w-full py-0.5 text-xs leading-tight text-center ${datePillClass}">
+                ${dateDisplay}
+              </span>
             </div>
 
-            <!-- Bottom: Narrow Green chip (Office count) -->
+            <!-- Bottom: 3-digit width Green pill (Office count) -->
             <div class="flex items-center justify-center w-full">
-              <span class="px-1.5 py-0.5 rounded-md bg-[#2e7d32] text-white font-bold text-[10px] leading-none min-w-[20px] text-center shadow-xs">
+              <span class="w-7 py-0.5 rounded-full bg-[#2e7d32] text-white font-bold text-[10px] leading-none text-center shadow-xs flex items-center justify-center">
                 ${mockOffice}
               </span>
             </div>

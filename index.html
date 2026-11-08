@@ -1572,28 +1572,39 @@
             switchView("grid");
           };
 
-          // Clean uniform neutral borders (no red border on active week or selected date)
+          // Container: Grey square background with neutral border
           const borderClasses = "border border-[#e3e2e2] shadow-xs";
+          const opacityClass = !isSameMonth ? "opacity-40" : "";
 
-          cell.className = `flex flex-col rounded-xl overflow-hidden ${borderClasses} bg-white active:scale-95 transition-all cursor-pointer`;
+          cell.className = `flex flex-col items-center justify-between py-1.5 rounded-xl overflow-hidden ${borderClasses} bg-[#efeded] ${opacityClass} active:scale-95 transition-all cursor-pointer h-16`;
 
-          // Row 1: Date stripe (white-on-red for selected day, matching footer arrow buttons)
-          let dateBgClass = "bg-[#efeded] text-[#1b1c1c]";
+          // Format date as 2 digits
+          const dateDisplay = cellDate.getDate() < 10 ? `0${cellDate.getDate()}` : `${cellDate.getDate()}`;
+
+          // Middle date band: full-width, solid crimson ribbon with white text if selected
+          let middleRowClass = "text-[#1b1c1c] font-bold";
           if (isSelected) {
-            dateBgClass = "bg-[#b80000] text-white font-bold";
-          } else if (!isSameMonth) {
-            dateBgClass = "bg-[#efeded]/50 text-[#1b1c1c]/40";
+            middleRowClass = "bg-[#b80000] text-white font-bold py-0.5 shadow-xs";
           }
 
           cell.innerHTML = `
-            <div class="py-1 text-center font-bold text-[11px] leading-none ${dateBgClass}">
-              ${cellDate.getDate()}
+            <!-- Top: Narrow Yellow chip (Out count) -->
+            <div class="flex items-center justify-center w-full">
+              <span class="px-1.5 py-0.5 rounded-md bg-[#fbc02d] text-[#1a1a1a] font-bold text-[10px] leading-none min-w-[20px] text-center shadow-xs">
+                ${mockOut}
+              </span>
             </div>
-            <div class="py-1 bg-[#2e7d32] text-white text-center font-bold text-[10px] leading-none">
-              ${mockOffice}
+
+            <!-- Middle: Full-width Date row -->
+            <div class="w-full text-center text-xs leading-none ${middleRowClass}">
+              ${dateDisplay}
             </div>
-            <div class="py-1 bg-[#fbc02d] text-[#1a1a1a] text-center font-bold text-[10px] leading-none">
-              ${mockOut}
+
+            <!-- Bottom: Narrow Green chip (Office count) -->
+            <div class="flex items-center justify-center w-full">
+              <span class="px-1.5 py-0.5 rounded-md bg-[#2e7d32] text-white font-bold text-[10px] leading-none min-w-[20px] text-center shadow-xs">
+                ${mockOffice}
+              </span>
             </div>
           `;
 

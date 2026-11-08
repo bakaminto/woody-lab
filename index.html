@@ -97,10 +97,10 @@
   </header>
 
   <!-- ==================== ROOT VIEWS CONTAINER ==================== -->
-  <main class="flex-1 w-full pt-[140px] overflow-y-auto overscroll-contain">
+  <main class="flex-1 w-full pt-[162px] px-3 overflow-y-auto overscroll-contain">
 
     <!-- VIEW 1A: GRID VIEW -->
-    <section id="viewGrid" class="block pb-[calc(106px+env(safe-area-inset-bottom,0px))] px-4 max-w-md mx-auto">
+    <section id="viewGrid" class="block pb-[calc(106px+env(safe-area-inset-bottom,0px))] px-1 max-w-md mx-auto">
       <div class="flex flex-col w-full gap-4">
         <div class="bg-[#f5f3f3] p-4 rounded-2xl shadow-sm border border-[#e9e8e7]">
           <div class="grid grid-cols-5 gap-2.5 justify-items-center w-full" id="gridContainer"></div>
@@ -109,7 +109,7 @@
     </section>
 
     <!-- VIEW 1B: LIST VIEW -->
-    <section id="viewList" class="hidden pb-[calc(106px+env(safe-area-inset-bottom,0px))] px-4 max-w-md mx-auto">
+    <section id="viewList" class="hidden pb-[calc(106px+env(safe-area-inset-bottom,0px))] px-1 max-w-md mx-auto">
       <div class="flex flex-col w-full gap-3">
         <!-- Accordion 1: Out on Job -->
         <div class="flex flex-col rounded-xl bg-[#f5f3f3] border border-[#e9e8e7] overflow-hidden">
@@ -162,7 +162,7 @@
     </section>
 
     <!-- VIEW 1C: CALENDAR VIEW (6-WEEK ROLLING HORIZON) -->
-    <section id="viewCalendar" class="hidden pb-[calc(106px+env(safe-area-inset-bottom,0px))] px-3 max-w-md mx-auto">
+    <section id="viewCalendar" class="hidden pb-[calc(106px+env(safe-area-inset-bottom,0px))] max-w-md mx-auto w-full">
       <div class="flex flex-col w-full">
         <!-- 6 Rows x 7 Columns Rolling Grid -->
         <div class="grid grid-cols-7 gap-1.5 w-full" id="calendarRollingGrid"></div>
@@ -1565,10 +1565,10 @@
 
           cell.className = `flex flex-col rounded-xl overflow-hidden ${borderClasses} bg-white active:scale-95 transition-all cursor-pointer`;
 
-          // Row 1: Date stripe (red-on-white for selected day, matching toggle pill & footer)
+          // Row 1: Date stripe (white-on-red for selected day, matching footer arrow buttons)
           let dateBgClass = "bg-[#efeded] text-[#1b1c1c]";
           if (isSelected) {
-            dateBgClass = "bg-white text-[#b80000] font-bold";
+            dateBgClass = "bg-[#b80000] text-white font-bold";
           } else if (!isSameMonth) {
             dateBgClass = "bg-[#efeded]/50 text-[#1b1c1c]/40";
           }

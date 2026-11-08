@@ -47,14 +47,16 @@
   <header class="fixed top-0 w-full z-40 bg-[#fbf9f9]/80 backdrop-blur-xl border-b border-[#e9e8e7] px-3">
     <div class="h-6"></div>
     <div class="pb-3 pt-1 max-w-md mx-auto w-full flex flex-col gap-2.5">
-      <!-- Main Navigation Toggle (Grid / List Views) -->
+      <!-- Main Navigation Toggle (Grid / List / Calendar Views) -->
       <div id="navMain" class="flex flex-col gap-6 w-full">
         <div class="relative flex items-center justify-center w-full">
-        <div class="bg-[#efeded] p-1 rounded-xl flex items-center">
+        <div class="bg-[#efeded] p-1 rounded-2xl flex items-center gap-1">
           <button type="button" id="tabList" onclick="switchView('list')"
-            class="px-4 py-1.5 rounded-lg text-xs font-semibold text-[#5d403b] hover:text-[#1b1c1c] transition-all cursor-pointer">List</button>
+            class="px-4 py-1.5 rounded-xl text-xs font-semibold text-[#5d403b] hover:text-[#1b1c1c] transition-all cursor-pointer">List</button>
+          <button type="button" id="tabMonth" onclick="switchView('calendar')"
+            class="px-4 h-12 rounded-xl text-xs font-bold text-[#5d403b] hover:text-[#1b1c1c] transition-all cursor-pointer tracking-wider flex items-center justify-center">NOV</button>
           <button type="button" id="tabGrid" onclick="switchView('grid')"
-            class="px-4 py-1.5 rounded-lg text-xs font-bold bg-white text-[#b80000] shadow-sm transition-all cursor-pointer">Grid</button>
+            class="px-4 py-1.5 rounded-xl text-xs font-bold bg-white text-[#b80000] shadow-sm transition-all cursor-pointer">Grid</button>
         </div>
         <div class="absolute right-0 flex items-center">
           <button type="button" onclick="switchView('setup')"
@@ -155,6 +157,26 @@
             </svg>
           </button>
           <div class="flex flex-col px-3 pb-3 gap-2 hidden" id="listInactiveContent"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 1C: CALENDAR VIEW (6-WEEK ROLLING HORIZON) -->
+    <section id="viewCalendar" class="hidden pb-[calc(106px+env(safe-area-inset-bottom,0px))] px-3 max-w-md mx-auto">
+      <div class="flex flex-col w-full gap-2">
+        <div class="bg-[#f5f3f3] p-3 rounded-2xl shadow-sm border border-[#e9e8e7]">
+          <!-- Weekday Column Headers -->
+          <div class="grid grid-cols-7 gap-1.5 mb-2 text-center select-none">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-[#916f69]">Mo</span>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-[#916f69]">Di</span>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-[#916f69]">Mi</span>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-[#916f69]">Do</span>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-[#916f69]">Fr</span>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-[#916f69]/60">Sa</span>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-[#916f69]/60">So</span>
+          </div>
+          <!-- 6 Rows x 7 Columns Rolling Grid -->
+          <div class="grid grid-cols-7 gap-1.5 w-full" id="calendarRollingGrid"></div>
         </div>
       </div>
     </section>
@@ -492,8 +514,9 @@
       const prevView = currentView;
       currentView = viewName;
 
-      ["viewGrid", "viewList", "viewDetail", "viewSetup"].forEach(id => {
-        document.getElementById(id).classList.add("hidden");
+      ["viewGrid", "viewList", "viewCalendar", "viewDetail", "viewSetup"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add("hidden");
       });
 
       const navMain = document.getElementById("navMain");
@@ -505,30 +528,38 @@
 
       const timelineFooter = document.getElementById("timelineFooter");
       if (timelineFooter) {
-        if (viewName === "grid" || viewName === "list") {
+        if (viewName === "grid" || viewName === "list" || viewName === "calendar") {
           timelineFooter.classList.remove("hidden");
         } else {
           timelineFooter.classList.add("hidden");
         }
       }
 
-      if (viewName === "grid" || viewName === "list") {
+      if (viewName === "grid" || viewName === "list" || viewName === "calendar") {
         navMain.classList.remove("hidden");
         navSub.classList.add("hidden");
 
         const tabGrid = document.getElementById("tabGrid");
         const tabList = document.getElementById("tabList");
+        const tabMonth = document.getElementById("tabMonth");
+
+        // Base styles for inactive tabs
+        tabGrid.className = "px-4 py-1.5 rounded-xl text-xs font-semibold text-[#5d403b] hover:text-[#1b1c1c] transition-all cursor-pointer";
+        tabList.className = "px-4 py-1.5 rounded-xl text-xs font-semibold text-[#5d403b] hover:text-[#1b1c1c] transition-all cursor-pointer";
+        tabMonth.className = "px-4 h-12 rounded-xl text-xs font-bold text-[#5d403b] hover:text-[#1b1c1c] transition-all cursor-pointer tracking-wider flex items-center justify-center";
 
         if (viewName === "grid") {
-          tabGrid.className = "px-4 py-1.5 rounded-lg text-xs font-bold bg-white text-[#b80000] shadow-sm transition-all cursor-pointer";
-          tabList.className = "px-4 py-1.5 rounded-lg text-xs font-semibold text-[#5d403b] hover:text-[#1b1c1c] transition-all cursor-pointer";
+          tabGrid.className = "px-4 py-1.5 rounded-xl text-xs font-bold bg-white text-[#b80000] shadow-sm transition-all cursor-pointer";
           document.getElementById("viewGrid").classList.remove("hidden");
           renderGridView();
-        } else {
-          tabList.className = "px-4 py-1.5 rounded-lg text-xs font-bold bg-white text-[#b80000] shadow-sm transition-all cursor-pointer";
-          tabGrid.className = "px-4 py-1.5 rounded-lg text-xs font-semibold text-[#5d403b] hover:text-[#1b1c1c] transition-all cursor-pointer";
+        } else if (viewName === "list") {
+          tabList.className = "px-4 py-1.5 rounded-xl text-xs font-bold bg-white text-[#b80000] shadow-sm transition-all cursor-pointer";
           document.getElementById("viewList").classList.remove("hidden");
           renderListView();
+        } else if (viewName === "calendar") {
+          tabMonth.className = "px-4 h-12 rounded-xl text-xs font-bold bg-white text-[#b80000] shadow-sm transition-all cursor-pointer tracking-wider flex items-center justify-center";
+          document.getElementById("viewCalendar").classList.remove("hidden");
+          renderCalendarView();
         }
       } else if (viewName === "detail") {
         navMain.classList.add("hidden");
@@ -685,7 +716,7 @@
               <span class="text-sm font-semibold truncate text-[#1b1c1c]">${dev.customer || "Unspecified Customer"}</span>
               <p class="text-xs text-[#5d403b] truncate">${dev.event || "No event"}</p>
               <div class="text-[11px] text-[#916f69] font-medium mt-0.5">
-                ${dev.due_date ? `Due: ${dev.due_date}` : ""} ${dev.out_date ? `• Sent: ${dev.out_date}` : ""}
+                ${dev.due_date ? `Due: ${dev.due_date}` : ""} ${dev.out_date ? `â€¢ Sent: ${dev.out_date}` : ""}
               </div>
             </div>
           </div>
@@ -988,7 +1019,7 @@
                   <button type="button" onclick="openRenameModal('${dev.id}')" class="text-sm font-semibold text-[#1b1c1c] text-left hover:underline cursor-pointer">
                     ${dev.label}
                   </button>
-                  <span class="text-xs text-[#5d403b]">${isOut ? `${dev.customer} •${dev.event}` : (isInactive ? "Inactive" : "Available")}</span>
+                  <span class="text-xs text-[#5d403b]">${isOut ? `${dev.customer} â€¢${dev.event}` : (isInactive ? "Inactive" : "Available")}</span>
                 </div>
               </div>
               ${toggleHtml}
@@ -1413,33 +1444,171 @@
       }
     }
 
-    // Mock UI Timeline Interactions (Prototype)
-    let mockCwNumber = 45;
-    function selectMockDay(selectedBtn) {
-      document.querySelectorAll(".timeline-day-btn").forEach(btn => {
-        btn.className = "timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg text-[#5d403b] hover:text-[#1b1c1c] active:scale-95 transition-all cursor-pointer";
-        const dayLabel = btn.querySelector("span:first-child");
-        if (dayLabel) dayLabel.className = "text-[9px] font-bold uppercase tracking-wider opacity-60";
-        const dateNum = btn.querySelector("span:last-child");
-        if (dateNum) dateNum.className = "text-xs font-semibold leading-tight";
-      });
-      selectedBtn.className = "timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg bg-white text-[#b80000] shadow-sm active:scale-95 transition-all cursor-pointer";
-      const activeLabel = selectedBtn.querySelector("span:first-child");
-      if (activeLabel) activeLabel.className = "text-[9px] font-bold uppercase tracking-wider text-[#b80000]";
-      const activeNum = selectedBtn.querySelector("span:last-child");
-      if (activeNum) activeNum.className = "text-xs font-bold leading-tight text-[#b80000]";
+    // ==================== CALENDAR & TIMELINE STATE ====================
+    const MONTH_NAMES = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+    const DAY_NAMES = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
+
+    // Selected Date state (defaults to Wednesday Nov 4, 2026)
+    let selectedDate = new Date(2026, 10, 4);
+
+    function getMondayOfWeek(d) {
+      const date = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+      const day = date.getDay(); // 0 is Sun, 1 is Mon...
+      const diff = date.getDate() - day + (day === 0 ? -6 : 1);
+      return new Date(date.setDate(diff));
+    }
+
+    function getCalendarWeek(d) {
+      const target = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+      const dayNr = target.getUTCDay() || 7;
+      target.setUTCDate(target.getUTCDate() + 4 - dayNr);
+      const yearStart = new Date(Date.UTC(target.getUTCFullYear(), 0, 1));
+      return Math.ceil((((target - yearStart) / 86400000) + 1) / 7);
+    }
+
+    function isSameDate(d1, d2) {
+      return d1.getFullYear() === d2.getFullYear() &&
+             d1.getMonth() === d2.getMonth() &&
+             d1.getDate() === d2.getDate();
+    }
+
+    // Update Footer Week Controls & Metadata Row
+    function updateTimelineFooter() {
+      const focalMonday = getMondayOfWeek(selectedDate);
+      const container = document.getElementById("timelineDaysContainer");
+      if (!container) return;
+
+      container.innerHTML = "";
+      for (let i = 0; i < 7; i++) {
+        const dayDate = new Date(focalMonday.getTime() + (i * 86400000));
+        const isSelected = isSameDate(dayDate, selectedDate);
+        const dayPad = dayDate.getDate() < 10 ? `0${dayDate.getDate()}` : `${dayDate.getDate()}`;
+        const dayName = DAY_NAMES[i];
+        const isWeekend = i >= 5;
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.onclick = () => selectDay(dayDate);
+        if (isSelected) {
+          btn.className = "timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg bg-white text-[#b80000] shadow-sm active:scale-95 transition-all cursor-pointer";
+          btn.innerHTML = `
+            <span class="text-[9px] font-bold uppercase tracking-wider text-[#b80000]">${dayName}</span>
+            <span class="text-xs font-bold leading-tight text-[#b80000]">${dayPad}</span>
+          `;
+        } else {
+          btn.className = `timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg ${isWeekend ? 'text-[#5d403b]/70' : 'text-[#5d403b]'} hover:text-[#1b1c1c] active:scale-95 transition-all cursor-pointer`;
+          btn.innerHTML = `
+            <span class="text-[9px] font-bold uppercase tracking-wider ${isWeekend ? 'opacity-50' : 'opacity-60'}">${dayName}</span>
+            <span class="text-xs font-semibold leading-tight">${dayPad}</span>
+          `;
+        }
+        container.appendChild(btn);
+      }
+
+      // Metadata Row
+      const monthLabel = document.getElementById("timelineMonthLabel");
+      if (monthLabel) monthLabel.textContent = MONTH_NAMES[selectedDate.getMonth()];
+      const yearLabel = document.getElementById("timelineYearLabel");
+      if (yearLabel) yearLabel.textContent = selectedDate.getFullYear();
+      const cwLabel = document.getElementById("timelineCwLabel");
+      if (cwLabel) {
+        const cw = getCalendarWeek(selectedDate);
+        cwLabel.textContent = `CW #${cw < 10 ? '0' + cw : cw}`;
+      }
+
+      // Top Toggle Month text
+      const tabMonth = document.getElementById("tabMonth");
+      if (tabMonth) tabMonth.textContent = MONTH_NAMES[selectedDate.getMonth()];
+    }
+
+    function selectDay(date) {
+      selectedDate = new Date(date);
+      updateTimelineFooter();
+      if (currentView === "calendar") {
+        renderCalendarView();
+      }
     }
 
     function handleMockWeekChange(delta) {
-      mockCwNumber += delta;
-      if (mockCwNumber < 1) mockCwNumber = 52;
-      if (mockCwNumber > 52) mockCwNumber = 1;
-      const pad = mockCwNumber < 10 ? `0${mockCwNumber}` : `${mockCwNumber}`;
-      const label = document.getElementById("timelineCwLabel");
-      if (label) label.textContent = `CW #${pad}`;
+      const newDate = new Date(selectedDate);
+      newDate.setDate(newDate.getDate() + (delta * 7));
+      selectedDate = newDate;
+      updateTimelineFooter();
+      if (currentView === "calendar") {
+        renderCalendarView();
+      }
     }
 
-    // Startup View
+    // Render 6-Week Rolling Calendar Grid (Row index 2 is Line 3 / Anchor Focal Week)
+    function renderCalendarView() {
+      const container = document.getElementById("calendarRollingGrid");
+      if (!container) return;
+      container.innerHTML = "";
+
+      const focalMonday = getMondayOfWeek(selectedDate);
+      // Row 0 is 2 weeks prior (-14 days)
+      const startDate = new Date(focalMonday.getTime() - (14 * 86400000));
+      const curMonth = selectedDate.getMonth();
+
+      for (let row = 0; row < 6; row++) {
+        const isAnchorRow = (row === 2); // Line 3 is the focal anchor week!
+
+        for (let col = 0; col < 7; col++) {
+          const dayOffset = (row * 7) + col;
+          const cellDate = new Date(startDate.getTime() + (dayOffset * 86400000));
+          const isSelected = isSameDate(cellDate, selectedDate);
+          const isSameMonth = cellDate.getMonth() === curMonth;
+
+          // Deterministic device occupancy per date
+          const dateNum = cellDate.getDate();
+          const mockOffice = 11 + ((dateNum * 5 + row) % 9);
+          const mockOut = 3 + ((dateNum * 3 + col) % 6);
+
+          const cell = document.createElement("button");
+          cell.type = "button";
+          cell.onclick = () => {
+            selectedDate = new Date(cellDate);
+            updateTimelineFooter();
+            switchView("grid");
+          };
+
+          // Border and focus ring styling
+          let borderClasses = "border border-[#e3e2e2]";
+          if (isSelected) {
+            borderClasses = "border-2 border-[#b80000] ring-2 ring-[#b80000]/30 shadow-md scale-[1.02] z-10";
+          } else if (isAnchorRow) {
+            borderClasses = "border border-[#b80000]/40 shadow-xs";
+          }
+
+          cell.className = `flex flex-col rounded-xl overflow-hidden ${borderClasses} bg-white active:scale-95 transition-all cursor-pointer`;
+
+          // Row 1: Date stripe
+          let dateBgClass = "bg-[#efeded] text-[#1b1c1c]";
+          if (isSelected) {
+            dateBgClass = "bg-[#b80000] text-white";
+          } else if (!isSameMonth) {
+            dateBgClass = "bg-[#f5f3f3] text-[#1b1c1c]/40";
+          }
+
+          cell.innerHTML = `
+            <div class="py-1 text-center font-bold text-[11px] leading-none ${dateBgClass}">
+              ${cellDate.getDate()}
+            </div>
+            <div class="py-1 bg-[#2e7d32] text-white text-center font-bold text-[10px] leading-none">
+              ${mockOffice}
+            </div>
+            <div class="py-1 bg-[#fbc02d] text-[#1a1a1a] text-center font-bold text-[10px] leading-none">
+              ${mockOut}
+            </div>
+          `;
+
+          container.appendChild(cell);
+        }
+      }
+    }
+
+    // Startup Initialization
+    updateTimelineFooter();
     switchView("grid");
 
     // Service Worker Registration

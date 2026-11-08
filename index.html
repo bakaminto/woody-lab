@@ -163,21 +163,9 @@
 
     <!-- VIEW 1C: CALENDAR VIEW (6-WEEK ROLLING HORIZON) -->
     <section id="viewCalendar" class="hidden pb-[calc(106px+env(safe-area-inset-bottom,0px))] px-3 max-w-md mx-auto">
-      <div class="flex flex-col w-full gap-2">
-        <div class="bg-[#f5f3f3] p-3 rounded-2xl shadow-sm border border-[#e9e8e7]">
-          <!-- Weekday Column Headers -->
-          <div class="grid grid-cols-7 gap-1.5 mb-2 text-center select-none">
-            <span class="text-[10px] font-bold uppercase tracking-wider text-[#916f69]">Mo</span>
-            <span class="text-[10px] font-bold uppercase tracking-wider text-[#916f69]">Di</span>
-            <span class="text-[10px] font-bold uppercase tracking-wider text-[#916f69]">Mi</span>
-            <span class="text-[10px] font-bold uppercase tracking-wider text-[#916f69]">Do</span>
-            <span class="text-[10px] font-bold uppercase tracking-wider text-[#916f69]">Fr</span>
-            <span class="text-[10px] font-bold uppercase tracking-wider text-[#916f69]/60">Sa</span>
-            <span class="text-[10px] font-bold uppercase tracking-wider text-[#916f69]/60">So</span>
-          </div>
-          <!-- 6 Rows x 7 Columns Rolling Grid -->
-          <div class="grid grid-cols-7 gap-1.5 w-full" id="calendarRollingGrid"></div>
-        </div>
+      <div class="flex flex-col w-full">
+        <!-- 6 Rows x 7 Columns Rolling Grid -->
+        <div class="grid grid-cols-7 gap-1.5 w-full" id="calendarRollingGrid"></div>
       </div>
     </section>
 
@@ -1572,22 +1560,17 @@
             switchView("grid");
           };
 
-          // Border and focus ring styling
-          let borderClasses = "border border-[#e3e2e2]";
-          if (isSelected) {
-            borderClasses = "border-2 border-[#b80000] ring-2 ring-[#b80000]/30 shadow-md scale-[1.02] z-10";
-          } else if (isAnchorRow) {
-            borderClasses = "border border-[#b80000]/40 shadow-xs";
-          }
+          // Clean uniform neutral borders (no red border on active week or selected date)
+          const borderClasses = "border border-[#e3e2e2] shadow-xs";
 
           cell.className = `flex flex-col rounded-xl overflow-hidden ${borderClasses} bg-white active:scale-95 transition-all cursor-pointer`;
 
-          // Row 1: Date stripe
+          // Row 1: Date stripe (red-on-white for selected day, matching toggle pill & footer)
           let dateBgClass = "bg-[#efeded] text-[#1b1c1c]";
           if (isSelected) {
-            dateBgClass = "bg-[#b80000] text-white";
+            dateBgClass = "bg-white text-[#b80000] font-bold";
           } else if (!isSameMonth) {
-            dateBgClass = "bg-[#f5f3f3] text-[#1b1c1c]/40";
+            dateBgClass = "bg-[#efeded]/50 text-[#1b1c1c]/40";
           }
 
           cell.innerHTML = `

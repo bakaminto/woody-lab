@@ -61,7 +61,7 @@
           <!-- Center Tower: Month Housing (Double Height) -->
           <div class="bg-[#efeded] h-14 p-1 rounded-2xl flex items-center justify-center shadow-xs z-10 -mx-0.5">
             <button type="button" id="tabMonth" onclick="switchView('calendar')"
-              class="px-4 h-12 rounded-xl text-xs font-bold text-[#5d403b] hover:text-[#1b1c1c] transition-all cursor-pointer tracking-wider flex items-center justify-center">NOV</button>
+              class="px-4 h-12 rounded-xl text-lg font-bold text-[#5d403b] hover:text-[#1b1c1c] transition-all cursor-pointer tracking-wider flex items-center justify-center">NOV</button>
           </div>
 
           <!-- Right Wing: List Housing -->
@@ -546,7 +546,7 @@
         // Base styles for inactive tabs
         tabGrid.className = "px-3.5 h-7 rounded-xl text-xs font-semibold text-[#5d403b] hover:text-[#1b1c1c] transition-all cursor-pointer flex items-center justify-center";
         tabList.className = "px-3.5 h-7 rounded-xl text-xs font-semibold text-[#5d403b] hover:text-[#1b1c1c] transition-all cursor-pointer flex items-center justify-center";
-        tabMonth.className = "px-4 h-12 rounded-xl text-xs font-bold text-[#5d403b] hover:text-[#1b1c1c] transition-all cursor-pointer tracking-wider flex items-center justify-center";
+        tabMonth.className = "px-4 h-12 rounded-xl text-lg font-bold text-[#5d403b] hover:text-[#1b1c1c] transition-all cursor-pointer tracking-wider flex items-center justify-center";
 
         if (viewName === "grid") {
           tabGrid.className = "px-3.5 h-7 rounded-xl text-xs font-bold bg-white text-[#b80000] shadow-sm transition-all cursor-pointer flex items-center justify-center";
@@ -557,7 +557,7 @@
           document.getElementById("viewList").classList.remove("hidden");
           renderListView();
         } else if (viewName === "calendar") {
-          tabMonth.className = "px-4 h-12 rounded-xl text-xs font-bold bg-white text-[#b80000] shadow-sm transition-all cursor-pointer tracking-wider flex items-center justify-center";
+          tabMonth.className = "px-4 h-12 rounded-xl text-lg font-bold bg-white text-[#b80000] shadow-sm transition-all cursor-pointer tracking-wider flex items-center justify-center";
           document.getElementById("viewCalendar").classList.remove("hidden");
           renderCalendarView();
         }

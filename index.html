@@ -1582,6 +1582,79 @@
     const CALENDAR_FUTURE_WEEKS = 40;
     const CALENDAR_TOTAL_WEEKS = CALENDAR_PAST_WEEKS + CALENDAR_FUTURE_WEEKS; // 52 weeks = 1 full year
 
+    // Percentage Heatmap Helper for Out (Yellow) Badges (5 Shades: 0-20%, 21-40%, 41-60%, 61-80%, 81-100%)
+    function getOutBadgeConfig(count, total = 20) {
+      if (count <= 0) {
+        return { isZero: true, bgClass: "", textClass: "", countText: "" };
+      }
+      const pct = (count / total) * 100;
+      if (pct <= 20) {
+        return { isZero: false, bgClass: "bg-[#fef08a]", textClass: "text-[#1a1a1a]", countText: String(count) };
+      } else if (pct <= 40) {
+        return { isZero: false, bgClass: "bg-[#fde047]", textClass: "text-[#1a1a1a]", countText: String(count) };
+      } else if (pct <= 60) {
+        return { isZero: false, bgClass: "bg-[#facc15]", textClass: "text-[#1a1a1a]", countText: String(count) };
+      } else if (pct <= 80) {
+        return { isZero: false, bgClass: "bg-[#eab308]", textClass: "text-[#1a1a1a]", countText: String(count) };
+      } else {
+        return { isZero: false, bgClass: "bg-[#ca8a04]", textClass: "text-[#1a1a1a]", countText: String(count) };
+      }
+    }
+
+    // Percentage Heatmap Helper for Office (Green) Badges (5 Shades: 0-20%, 21-40%, 41-60%, 61-80%, 81-100%)
+    function getOfficeBadgeConfig(count, total = 20) {
+      if (count <= 0) {
+        return { isZero: true, bgClass: "", textClass: "", countText: "" };
+      }
+      const pct = (count / total) * 100;
+      if (pct <= 20) {
+        return { isZero: false, bgClass: "bg-[#bbf7d0]", textClass: "text-[#14532d]", countText: String(count) };
+      } else if (pct <= 40) {
+        return { isZero: false, bgClass: "bg-[#86efac]", textClass: "text-[#14532d]", countText: String(count) };
+      } else if (pct <= 60) {
+        return { isZero: false, bgClass: "bg-[#4ade80]", textClass: "text-[#14532d]", countText: String(count) };
+      } else if (pct <= 80) {
+        return { isZero: false, bgClass: "bg-[#2e7d32]", textClass: "text-white", countText: String(count) };
+      } else {
+        return { isZero: false, bgClass: "bg-[#1b5e20]", textClass: "text-white", countText: String(count) };
+      }
+    }
+
+    // Deterministic simulation generator covering realistic office clusters, partial bookings, and peak all-out dates
+    function getMockDayOccupancy(row, col, cellDate) {
+      const TOTAL_FLEET = 20;
+
+      // 1. Designated quiet weeks (all devices in office)
+      if (row === 2 || row === 9 || row === 17 || row === 26 || row === 38 || row === 47) {
+        return { out: 0, office: TOTAL_FLEET };
+      }
+
+      // 2. Designated peak dates (all devices out on job)
+      if ((row === 7 && (col === 2 || col === 3)) ||
+          (row === 13 && col === 1) ||
+          (row === 21 && (col === 3 || col === 4)) ||
+          (row === 30 && (col >= 2 && col <= 4)) ||
+          (row === 42 && col === 2)) {
+        return { out: TOTAL_FLEET, office: 0 };
+      }
+
+      // 3. Regular weekends frequently have all devices in office
+      const isWeekend = col >= 5;
+      if (isWeekend && (row % 3 !== 0)) {
+        return { out: 0, office: TOTAL_FLEET };
+      }
+
+      // 4. Deterministic smooth undulating wave for realistic booking variance
+      const dayNum = cellDate.getDate();
+      const wave = Math.sin(row * 0.45 + col * 0.3) * 0.5 + 0.5;
+      const jitter = (((dayNum * 7 + col * 13) % 11) / 10) - 0.5;
+      const rawPercent = Math.max(0, Math.min(1, wave + jitter * 0.4));
+      let outCount = Math.round(rawPercent * TOTAL_FLEET);
+      outCount = Math.max(0, Math.min(TOTAL_FLEET, outCount));
+
+      return { out: outCount, office: TOTAL_FLEET - outCount };
+    }
+
     // Render Continuous Multi-Week Rolling Calendar Grid
     function renderCalendarView() {
       const container = document.getElementById("calendarRollingGrid");
@@ -1598,9 +1671,9 @@
           const isSelected = isSameDate(cellDate, selectedDate);
 
           // Deterministic device occupancy per date
-          const dateNum = cellDate.getDate();
-          const mockOffice = 11 + ((dateNum * 5 + row) % 9);
-          const mockOut = 3 + ((dateNum * 3 + col) % 6);
+          const occ = getMockDayOccupancy(row, col, cellDate);
+          const outConf = getOutBadgeConfig(occ.out);
+          const officeConf = getOfficeBadgeConfig(occ.office);
 
           const dateKey = `${cellDate.getFullYear()}-${String(cellDate.getMonth() + 1).padStart(2, '0')}-${String(cellDate.getDate()).padStart(2, '0')}`;
 
@@ -1630,12 +1703,18 @@
             datePillClass = "bg-[#b80000] text-white rounded-full shadow-xs";
           }
 
+          const outBadgeHtml = outConf.isZero
+            ? `<span class="w-10 h-[17px] invisible select-none"></span>`
+            : `<span class="w-10 py-0.5 rounded-full ${outConf.bgClass} ${outConf.textClass} font-bold text-xs leading-none text-center shadow-xs flex items-center justify-center">${outConf.countText}</span>`;
+
+          const officeBadgeHtml = officeConf.isZero
+            ? `<span class="w-10 h-[17px] invisible select-none"></span>`
+            : `<span class="w-10 py-0.5 rounded-full ${officeConf.bgClass} ${officeConf.textClass} font-bold text-xs leading-none text-center shadow-xs flex items-center justify-center">${officeConf.countText}</span>`;
+
           cell.innerHTML = `
-            <!-- Top: 3-digit width Yellow pill (Out count) -->
-            <div class="flex items-center justify-center w-full">
-              <span class="w-8 py-0.5 rounded-full bg-[#fbc02d] text-[#1a1a1a] font-bold text-xs leading-none text-center shadow-xs flex items-center justify-center">
-                ${mockOut}
-              </span>
+            <!-- Top: 4-letter width Yellow pill (Out count) -->
+            <div class="flex items-center justify-center w-full h-[18px]">
+              ${outBadgeHtml}
             </div>
 
             <!-- Middle: Wide Date pill (doesn't touch borders) -->
@@ -1645,11 +1724,9 @@
               </span>
             </div>
 
-            <!-- Bottom: 3-digit width Green pill (Office count) -->
-            <div class="flex items-center justify-center w-full">
-              <span class="w-8 py-0.5 rounded-full bg-[#2e7d32] text-white font-bold text-xs leading-none text-center shadow-xs flex items-center justify-center">
-                ${mockOffice}
-              </span>
+            <!-- Bottom: 4-letter width Green pill (Office count) -->
+            <div class="flex items-center justify-center w-full h-[18px]">
+              ${officeBadgeHtml}
             </div>
           `;
 

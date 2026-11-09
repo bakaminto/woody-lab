@@ -1582,41 +1582,43 @@
     const CALENDAR_FUTURE_WEEKS = 40;
     const CALENDAR_TOTAL_WEEKS = CALENDAR_PAST_WEEKS + CALENDAR_FUTURE_WEEKS; // 52 weeks = 1 full year
 
-    // Percentage Heatmap Helper for Out (Yellow) Badges (5 Shades: 0-20%, 21-40%, 41-60%, 61-80%, 81-100%)
+    // Percentage Transparency Helper for Out (Orange/Yellow #fbc02d) Badges (5 Opacity Steps: 0-20%, 21-40%, 41-60%, 61-80%, 81-100%)
     function getOutBadgeConfig(count, total = 20) {
       if (count <= 0) {
         return { isZero: true, bgClass: "", textClass: "", countText: "" };
       }
       const pct = (count / total) * 100;
       if (pct <= 20) {
-        return { isZero: false, bgClass: "bg-[#fef08a]", textClass: "text-[#1a1a1a]", countText: String(count) };
+        return { isZero: false, bgClass: "bg-[#fbc02d]/20", textClass: "text-[#1a1a1a]", countText: String(count) };
       } else if (pct <= 40) {
-        return { isZero: false, bgClass: "bg-[#fde047]", textClass: "text-[#1a1a1a]", countText: String(count) };
+        return { isZero: false, bgClass: "bg-[#fbc02d]/40", textClass: "text-[#1a1a1a]", countText: String(count) };
       } else if (pct <= 60) {
-        return { isZero: false, bgClass: "bg-[#facc15]", textClass: "text-[#1a1a1a]", countText: String(count) };
+        return { isZero: false, bgClass: "bg-[#fbc02d]/60", textClass: "text-[#1a1a1a]", countText: String(count) };
       } else if (pct <= 80) {
-        return { isZero: false, bgClass: "bg-[#eab308]", textClass: "text-[#1a1a1a]", countText: String(count) };
+        return { isZero: false, bgClass: "bg-[#fbc02d]/80", textClass: "text-[#1a1a1a]", countText: String(count) };
       } else {
-        return { isZero: false, bgClass: "bg-[#ca8a04]", textClass: "text-[#1a1a1a]", countText: String(count) };
+        // Full original solid color (81-100%)
+        return { isZero: false, bgClass: "bg-[#fbc02d]", textClass: "text-[#1a1a1a]", countText: String(count) };
       }
     }
 
-    // Percentage Heatmap Helper for Office (Green) Badges (5 Shades: 0-20%, 21-40%, 41-60%, 61-80%, 81-100%)
+    // Percentage Transparency Helper for Office (Green #2e7d32) Badges (5 Opacity Steps: 0-20%, 21-40%, 41-60%, 61-80%, 81-100%)
     function getOfficeBadgeConfig(count, total = 20) {
       if (count <= 0) {
         return { isZero: true, bgClass: "", textClass: "", countText: "" };
       }
       const pct = (count / total) * 100;
       if (pct <= 20) {
-        return { isZero: false, bgClass: "bg-[#bbf7d0]", textClass: "text-[#14532d]", countText: String(count) };
+        return { isZero: false, bgClass: "bg-[#2e7d32]/20", textClass: "text-[#14532d]", countText: String(count) };
       } else if (pct <= 40) {
-        return { isZero: false, bgClass: "bg-[#86efac]", textClass: "text-[#14532d]", countText: String(count) };
+        return { isZero: false, bgClass: "bg-[#2e7d32]/40", textClass: "text-[#14532d]", countText: String(count) };
       } else if (pct <= 60) {
-        return { isZero: false, bgClass: "bg-[#4ade80]", textClass: "text-[#14532d]", countText: String(count) };
+        return { isZero: false, bgClass: "bg-[#2e7d32]/60", textClass: "text-[#14532d]", countText: String(count) };
       } else if (pct <= 80) {
-        return { isZero: false, bgClass: "bg-[#2e7d32]", textClass: "text-white", countText: String(count) };
+        return { isZero: false, bgClass: "bg-[#2e7d32]/85", textClass: "text-white", countText: String(count) };
       } else {
-        return { isZero: false, bgClass: "bg-[#1b5e20]", textClass: "text-white", countText: String(count) };
+        // Full original solid color (81-100%)
+        return { isZero: false, bgClass: "bg-[#2e7d32]", textClass: "text-white", countText: String(count) };
       }
     }
 

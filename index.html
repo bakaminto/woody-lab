@@ -38,6 +38,14 @@
     .font-code {
       font-family: 'Roboto Flex', monospace;
     }
+
+    #timelineFooterInner.invisible,
+    #timelineFooterInner.invisible * {
+      visibility: hidden !important;
+      opacity: 0 !important;
+      transition: none !important;
+      pointer-events: none !important;
+    }
   </style>
 </head>
 
@@ -514,6 +522,16 @@
       const prevView = currentView;
       currentView = viewName;
 
+      // Immediately hide footer selector on Calendar before any view toggling (instant 0ms)
+      const timelineFooterInner = document.getElementById("timelineFooterInner");
+      if (timelineFooterInner) {
+        if (viewName === "calendar") {
+          timelineFooterInner.classList.add("invisible", "pointer-events-none");
+        } else {
+          timelineFooterInner.classList.remove("invisible", "pointer-events-none");
+        }
+      }
+
       ["viewGrid", "viewList", "viewCalendar", "viewDetail", "viewSetup"].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.classList.add("hidden");
@@ -527,19 +545,11 @@
       setupFABs.classList.add("hidden");
 
       const timelineFooter = document.getElementById("timelineFooter");
-      const timelineFooterInner = document.getElementById("timelineFooterInner");
       if (timelineFooter) {
         if (viewName === "grid" || viewName === "list" || viewName === "calendar") {
           timelineFooter.classList.remove("hidden");
         } else {
           timelineFooter.classList.add("hidden");
-        }
-      }
-      if (timelineFooterInner) {
-        if (viewName === "calendar") {
-          timelineFooterInner.classList.add("invisible", "pointer-events-none");
-        } else {
-          timelineFooterInner.classList.remove("invisible", "pointer-events-none");
         }
       }
 
@@ -1485,6 +1495,8 @@
         const tabMonth = document.getElementById("tabMonth");
         if (tabMonth) tabMonth.textContent = MONTH_NAMES[selectedDate.getMonth()];
       } else {
+        const footerInner = document.getElementById("timelineFooterInner");
+        if (footerInner) footerInner.classList.add("invisible", "pointer-events-none");
         switchView("calendar");
       }
     }
@@ -1611,9 +1623,9 @@
       if (pct <= 20) {
         return { isZero: false, bgClass: "bg-[#2e7d32]/20", textClass: "text-[#14532d]", countText: String(count) };
       } else if (pct <= 40) {
-        return { isZero: false, bgClass: "bg-[#2e7d32]/40", textClass: "text-[#14532d]", countText: String(count) };
+        return { isZero: false, bgClass: "bg-[#2e7d32]/40", textClass: "text-white", countText: String(count) };
       } else if (pct <= 60) {
-        return { isZero: false, bgClass: "bg-[#2e7d32]/60", textClass: "text-[#14532d]", countText: String(count) };
+        return { isZero: false, bgClass: "bg-[#2e7d32]/60", textClass: "text-white", countText: String(count) };
       } else if (pct <= 80) {
         return { isZero: false, bgClass: "bg-[#2e7d32]/85", textClass: "text-white", countText: String(count) };
       } else {

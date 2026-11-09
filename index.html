@@ -571,10 +571,9 @@
           updateHeaderCenterBadge();
           document.getElementById("viewCalendar").classList.remove("hidden");
           renderCalendarView();
+          scrollCalendarToDate(selectedDate, false);
           requestAnimationFrame(() => {
-            setTimeout(() => {
-              scrollCalendarToDate(selectedDate, true);
-            }, 20);
+            scrollCalendarToDate(selectedDate, false);
           });
         }
       } else if (viewName === "detail") {
@@ -1482,7 +1481,7 @@
 
     function handleMonthBadgeClick() {
       if (currentView === "calendar") {
-        scrollCalendarToDate(selectedDate, true);
+        scrollCalendarToDate(selectedDate, false);
         const tabMonth = document.getElementById("tabMonth");
         if (tabMonth) tabMonth.textContent = MONTH_NAMES[selectedDate.getMonth()];
       } else {
@@ -1564,7 +1563,7 @@
       updateTimelineFooter();
       if (currentView === "calendar") {
         renderCalendarView();
-        scrollCalendarToDate(selectedDate, true);
+        scrollCalendarToDate(selectedDate, false);
       }
     }
 
@@ -1575,7 +1574,7 @@
       updateTimelineFooter();
       if (currentView === "calendar") {
         renderCalendarView();
-        scrollCalendarToDate(selectedDate, true);
+        scrollCalendarToDate(selectedDate, false);
       }
     }
 
@@ -1615,10 +1614,12 @@
             switchView("grid");
           };
 
-          // Container: Grey square background with neutral border
-          const borderClasses = "border border-[#e3e2e2] shadow-xs";
+          // Alternating month shades (2 light grey tones to easily distinguish months)
+          const isEvenMonth = cellDate.getMonth() % 2 === 0;
+          const bgClass = isEvenMonth ? "bg-[#f5f4f4]" : "bg-[#dedcdc]";
+          const borderClass = isEvenMonth ? "border-[#e0dede]" : "border-[#cfcdcd]";
 
-          cell.className = `flex flex-col items-center justify-between py-1 rounded-xl overflow-hidden ${borderClasses} bg-[#efeded] active:scale-95 transition-all cursor-pointer h-[60px]`;
+          cell.className = `flex flex-col items-center justify-between py-1 rounded-xl overflow-hidden border ${borderClass} ${bgClass} shadow-xs active:scale-95 transition-all cursor-pointer h-[60px]`;
 
           // Format date as 2 digits
           const dateDisplay = cellDate.getDate() < 10 ? `0${cellDate.getDate()}` : `${cellDate.getDate()}`;
@@ -1657,7 +1658,7 @@
       }
     }
 
-    function scrollCalendarToDate(targetDate, smooth = true) {
+    function scrollCalendarToDate(targetDate, smooth = false) {
       if (!targetDate) targetDate = selectedDate;
       const dateKey = `${targetDate.getFullYear()}-${String(targetDate.getMonth() + 1).padStart(2, '0')}-${String(targetDate.getDate()).padStart(2, '0')}`;
       const targetTile = document.getElementById(`cal_day_${dateKey}`);

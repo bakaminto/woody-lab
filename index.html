@@ -182,7 +182,7 @@
     </section>
 
     <!-- VIEW 1C: CALENDAR VIEW (8-WEEK ROLLING HORIZON) -->
-    <section id="viewCalendar" class="hidden pb-[calc(106px+env(safe-area-inset-bottom,0px))] max-w-md mx-auto w-full">
+    <section id="viewCalendar" class="hidden pb-[calc(2rem+env(safe-area-inset-bottom,0px))] max-w-md mx-auto w-full">
       <div class="flex flex-col w-full">
         <!-- 8 Rows x 7 Columns Rolling Grid with enhanced row spacing -->
         <div class="grid grid-cols-7 gap-x-1.5 gap-y-2.5 w-full" id="calendarRollingGrid"></div>
@@ -522,13 +522,15 @@
       const prevView = currentView;
       currentView = viewName;
 
-      // Immediately hide footer selector on Calendar before any view toggling (instant 0ms)
+      // Handle footer visibility: only visible on Grid and List, completely hidden on Calendar, Detail, Setup
+      const timelineFooter = document.getElementById("timelineFooter");
       const timelineFooterInner = document.getElementById("timelineFooterInner");
-      if (timelineFooterInner) {
-        if (viewName === "calendar") {
-          timelineFooterInner.classList.add("invisible", "pointer-events-none");
+      if (timelineFooter) {
+        if (viewName === "grid" || viewName === "list") {
+          timelineFooter.classList.remove("hidden");
+          if (timelineFooterInner) timelineFooterInner.classList.remove("invisible", "pointer-events-none");
         } else {
-          timelineFooterInner.classList.remove("invisible", "pointer-events-none");
+          timelineFooter.classList.add("hidden");
         }
       }
 
@@ -543,15 +545,6 @@
       const subHeaderTitle = document.getElementById("subHeaderTitle");
 
       setupFABs.classList.add("hidden");
-
-      const timelineFooter = document.getElementById("timelineFooter");
-      if (timelineFooter) {
-        if (viewName === "grid" || viewName === "list" || viewName === "calendar") {
-          timelineFooter.classList.remove("hidden");
-        } else {
-          timelineFooter.classList.add("hidden");
-        }
-      }
 
       if (viewName === "grid" || viewName === "list" || viewName === "calendar") {
         navMain.classList.remove("hidden");
@@ -1495,8 +1488,8 @@
         const tabMonth = document.getElementById("tabMonth");
         if (tabMonth) tabMonth.textContent = MONTH_NAMES[selectedDate.getMonth()];
       } else {
-        const footerInner = document.getElementById("timelineFooterInner");
-        if (footerInner) footerInner.classList.add("invisible", "pointer-events-none");
+        const footer = document.getElementById("timelineFooter");
+        if (footer) footer.classList.add("hidden");
         switchView("calendar");
       }
     }
@@ -1726,16 +1719,16 @@
             : `<span class="w-10 py-0.5 rounded-full ${officeConf.bgClass} ${officeConf.textClass} font-bold text-xs leading-none text-center shadow-xs flex items-center justify-center">${officeConf.countText}</span>`;
 
           cell.innerHTML = `
-            <!-- Top: 4-letter width Yellow pill (Out count) -->
-            <div class="flex items-center justify-center w-full h-[18px]">
-              ${outBadgeHtml}
-            </div>
-
-            <!-- Middle: Wide Date pill (doesn't touch borders) -->
+            <!-- Top: Wide Date pill (doesn't touch borders) -->
             <div class="flex items-center justify-center w-full px-1">
               <span class="w-full py-0.5 text-xs font-bold leading-tight text-center ${datePillClass}">
                 ${dateDisplay}
               </span>
+            </div>
+
+            <!-- Middle: 4-letter width Yellow pill (Out count) -->
+            <div class="flex items-center justify-center w-full h-[18px]">
+              ${outBadgeHtml}
             </div>
 
             <!-- Bottom: 4-letter width Green pill (Office count) -->

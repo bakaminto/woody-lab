@@ -60,7 +60,7 @@
 
           <!-- Center Tower: Month Housing (Double Height) -->
           <div class="bg-[#efeded] h-14 p-1 rounded-2xl flex items-center justify-center shadow-xs z-10 -mx-0.5">
-            <button type="button" id="tabMonth" onclick="switchView('calendar')"
+            <button type="button" id="tabMonth" onclick="handleMonthBadgeClick()"
               class="px-4 h-12 rounded-xl text-lg font-bold text-[#5d403b] hover:text-[#1b1c1c] transition-all cursor-pointer tracking-wider flex items-center justify-center">NOV</button>
           </div>
 
@@ -253,7 +253,7 @@
   <!-- ==================== TIMELINE FOOTER (FIXED BOTTOM) ==================== -->
   <footer id="timelineFooter"
     class="fixed bottom-0 inset-x-0 z-40 bg-[#fbf9f9]/80 backdrop-blur-xl border-t border-[#e9e8e7] px-3 pt-2.5 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))] shadow-lg select-none">
-    <div class="max-w-md mx-auto grid grid-cols-[38px_1fr_38px] gap-2 items-stretch">
+    <div id="timelineFooterInner" class="max-w-md mx-auto grid grid-cols-[38px_1fr_38px] gap-2 items-stretch">
 
       <!-- Previous Week Button (Tall 2-measure span) -->
       <button type="button" id="btnPrevWeek" onclick="handleMockWeekChange(-1)"
@@ -527,11 +527,19 @@
       setupFABs.classList.add("hidden");
 
       const timelineFooter = document.getElementById("timelineFooter");
+      const timelineFooterInner = document.getElementById("timelineFooterInner");
       if (timelineFooter) {
         if (viewName === "grid" || viewName === "list" || viewName === "calendar") {
           timelineFooter.classList.remove("hidden");
         } else {
           timelineFooter.classList.add("hidden");
+        }
+      }
+      if (timelineFooterInner) {
+        if (viewName === "calendar") {
+          timelineFooterInner.classList.add("invisible", "pointer-events-none");
+        } else {
+          timelineFooterInner.classList.remove("invisible", "pointer-events-none");
         }
       }
 
@@ -550,16 +558,24 @@
 
         if (viewName === "grid") {
           tabGrid.className = "px-3.5 h-7 rounded-xl text-xs font-bold bg-white text-[#b80000] shadow-sm transition-all cursor-pointer flex items-center justify-center";
+          updateHeaderCenterBadge();
           document.getElementById("viewGrid").classList.remove("hidden");
           renderGridView();
         } else if (viewName === "list") {
           tabList.className = "px-3.5 h-7 rounded-xl text-xs font-bold bg-white text-[#b80000] shadow-sm transition-all cursor-pointer flex items-center justify-center";
+          updateHeaderCenterBadge();
           document.getElementById("viewList").classList.remove("hidden");
           renderListView();
         } else if (viewName === "calendar") {
           tabMonth.className = "px-4 h-12 rounded-xl text-lg font-bold bg-white text-[#b80000] shadow-sm transition-all cursor-pointer tracking-wider flex items-center justify-center";
+          updateHeaderCenterBadge();
           document.getElementById("viewCalendar").classList.remove("hidden");
           renderCalendarView();
+          requestAnimationFrame(() => {
+            setTimeout(() => {
+              scrollCalendarToDate(selectedDate, true);
+            }, 20);
+          });
         }
       } else if (viewName === "detail") {
         navMain.classList.add("hidden");
@@ -1448,8 +1464,31 @@
     const MONTH_NAMES = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
     const DAY_NAMES = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
 
-    // Selected Date state (defaults to Wednesday Nov 4, 2026)
-    let selectedDate = new Date(2026, 10, 4);
+    // Selected Date state (defaults to Today's real date on fresh launch)
+    const _initNow = new Date();
+    let selectedDate = new Date(_initNow.getFullYear(), _initNow.getMonth(), _initNow.getDate());
+
+    function updateHeaderCenterBadge() {
+      const tabMonth = document.getElementById("tabMonth");
+      if (!tabMonth) return;
+      if (currentView === "calendar") {
+        tabMonth.textContent = MONTH_NAMES[selectedDate.getMonth()];
+      } else {
+        const dPad = selectedDate.getDate() < 10 ? `0${selectedDate.getDate()}` : `${selectedDate.getDate()}`;
+        const mPad = (selectedDate.getMonth() + 1) < 10 ? `0${selectedDate.getMonth() + 1}` : `${selectedDate.getMonth() + 1}`;
+        tabMonth.textContent = `${dPad}/${mPad}`;
+      }
+    }
+
+    function handleMonthBadgeClick() {
+      if (currentView === "calendar") {
+        scrollCalendarToDate(selectedDate, true);
+        const tabMonth = document.getElementById("tabMonth");
+        if (tabMonth) tabMonth.textContent = MONTH_NAMES[selectedDate.getMonth()];
+      } else {
+        switchView("calendar");
+      }
+    }
 
     function getMondayOfWeek(d) {
       const date = new Date(d.getFullYear(), d.getMonth(), d.getDate());
@@ -1516,9 +1555,8 @@
         cwLabel.textContent = `CW #${cw < 10 ? '0' + cw : cw}`;
       }
 
-      // Top Toggle Month text
-      const tabMonth = document.getElementById("tabMonth");
-      if (tabMonth) tabMonth.textContent = MONTH_NAMES[selectedDate.getMonth()];
+      // Top Toggle Month / Date text
+      updateHeaderCenterBadge();
     }
 
     function selectDay(date) {
@@ -1526,6 +1564,7 @@
       updateTimelineFooter();
       if (currentView === "calendar") {
         renderCalendarView();
+        scrollCalendarToDate(selectedDate, true);
       }
     }
 
@@ -1536,36 +1575,40 @@
       updateTimelineFooter();
       if (currentView === "calendar") {
         renderCalendarView();
+        scrollCalendarToDate(selectedDate, true);
       }
     }
 
-    // Render 8-Week Rolling Calendar Grid (Row index 3 is Line 4 / Anchor Focal Week)
+    const CALENDAR_PAST_WEEKS = 12;
+    const CALENDAR_FUTURE_WEEKS = 40;
+    const CALENDAR_TOTAL_WEEKS = CALENDAR_PAST_WEEKS + CALENDAR_FUTURE_WEEKS; // 52 weeks = 1 full year
+
+    // Render Continuous Multi-Week Rolling Calendar Grid
     function renderCalendarView() {
       const container = document.getElementById("calendarRollingGrid");
       if (!container) return;
       container.innerHTML = "";
 
       const focalMonday = getMondayOfWeek(selectedDate);
-      // Row 0 is 3 weeks prior (-21 days)
-      const startDate = new Date(focalMonday.getTime() - (21 * 86400000));
-      const curMonth = selectedDate.getMonth();
+      const startDate = new Date(focalMonday.getFullYear(), focalMonday.getMonth(), focalMonday.getDate() - (CALENDAR_PAST_WEEKS * 7));
 
-      for (let row = 0; row < 8; row++) {
-        const isAnchorRow = (row === 3); // Line 4 is the focal anchor week!
-
+      for (let row = 0; row < CALENDAR_TOTAL_WEEKS; row++) {
         for (let col = 0; col < 7; col++) {
           const dayOffset = (row * 7) + col;
-          const cellDate = new Date(startDate.getTime() + (dayOffset * 86400000));
+          const cellDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + dayOffset);
           const isSelected = isSameDate(cellDate, selectedDate);
-          const isSameMonth = cellDate.getMonth() === curMonth;
 
           // Deterministic device occupancy per date
           const dateNum = cellDate.getDate();
           const mockOffice = 11 + ((dateNum * 5 + row) % 9);
           const mockOut = 3 + ((dateNum * 3 + col) % 6);
 
+          const dateKey = `${cellDate.getFullYear()}-${String(cellDate.getMonth() + 1).padStart(2, '0')}-${String(cellDate.getDate()).padStart(2, '0')}`;
+
           const cell = document.createElement("button");
           cell.type = "button";
+          cell.id = `cal_day_${dateKey}`;
+          cell.dataset.calDate = dateKey;
           cell.onclick = () => {
             selectedDate = new Date(cellDate);
             updateTimelineFooter();
@@ -1574,9 +1617,8 @@
 
           // Container: Grey square background with neutral border
           const borderClasses = "border border-[#e3e2e2] shadow-xs";
-          const opacityClass = !isSameMonth ? "opacity-40" : "";
 
-          cell.className = `flex flex-col items-center justify-between py-1 rounded-xl overflow-hidden ${borderClasses} bg-[#efeded] ${opacityClass} active:scale-95 transition-all cursor-pointer h-[60px]`;
+          cell.className = `flex flex-col items-center justify-between py-1 rounded-xl overflow-hidden ${borderClasses} bg-[#efeded] active:scale-95 transition-all cursor-pointer h-[60px]`;
 
           // Format date as 2 digits
           const dateDisplay = cellDate.getDate() < 10 ? `0${cellDate.getDate()}` : `${cellDate.getDate()}`;
@@ -1615,9 +1657,53 @@
       }
     }
 
+    function scrollCalendarToDate(targetDate, smooth = true) {
+      if (!targetDate) targetDate = selectedDate;
+      const dateKey = `${targetDate.getFullYear()}-${String(targetDate.getMonth() + 1).padStart(2, '0')}-${String(targetDate.getDate()).padStart(2, '0')}`;
+      const targetTile = document.getElementById(`cal_day_${dateKey}`);
+      if (targetTile) {
+        targetTile.scrollIntoView({
+          behavior: smooth ? 'smooth' : 'auto',
+          block: 'center',
+          inline: 'nearest'
+        });
+      }
+    }
+
+    let calScrollRaf = null;
+    function setupCalendarScrollListener() {
+      const mainEl = document.querySelector("main");
+      if (!mainEl) return;
+      mainEl.addEventListener("scroll", () => {
+        if (currentView !== "calendar") return;
+        if (calScrollRaf) cancelAnimationFrame(calScrollRaf);
+        calScrollRaf = requestAnimationFrame(() => {
+          const mainRect = mainEl.getBoundingClientRect();
+          const centerY = mainRect.top + (mainRect.height / 2);
+          const centerX = mainRect.left + (mainRect.width / 2);
+          const centerEl = document.elementFromPoint(centerX, centerY) ||
+                           document.elementFromPoint(centerX - 24, centerY) ||
+                           document.elementFromPoint(centerX + 24, centerY);
+          const tile = centerEl ? centerEl.closest("[data-cal-date]") : null;
+          if (tile && tile.dataset.calDate) {
+            const parts = tile.dataset.calDate.split("-");
+            const m = parseInt(parts[1], 10) - 1;
+            const tabMonth = document.getElementById("tabMonth");
+            if (tabMonth && currentView === "calendar") {
+              tabMonth.textContent = MONTH_NAMES[m];
+            }
+          }
+        });
+      }, { passive: true });
+    }
+
     // Startup Initialization
+    setupCalendarScrollListener();
     updateTimelineFooter();
-    switchView("grid");
+    switchView("calendar");
+    requestAnimationFrame(() => {
+      scrollCalendarToDate(selectedDate, false);
+    });
 
     // Service Worker Registration
     if ('serviceWorker' in navigator) {

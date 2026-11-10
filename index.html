@@ -1695,21 +1695,19 @@
           const isFirstOfMonth = (cellDate.getDate() === 1);
           const dPad = cellDate.getDate() < 10 ? `0${cellDate.getDate()}` : `${cellDate.getDate()}`;
           let dateDisplay = dPad;
-          let fontSizeClass = "text-sm";
           let pillWidthClass = "w-11";
 
           if (isFirstOfMonth) {
             const m = cellDate.getMonth() + 1;
             const mPad = m < 10 ? `0${m}` : `${m}`;
             dateDisplay = `${mPad}/${dPad}`;
-            fontSizeClass = "text-xs";
-            pillWidthClass = "px-2 min-w-11";
+            pillWidthClass = "px-1.5 min-w-11";
           }
 
-          // Upper Row: Date display (capsule pill matching status bar width, widened if first of month)
-          let datePillClass = `${pillWidthClass} h-[22px] flex items-center justify-center ${fontSizeClass} font-bold leading-none text-[#1b1c1c] text-center select-none`;
+          // Upper Row: Date display (uniform text-sm font size across all days, capsule pill matching status bar width)
+          let datePillClass = `${pillWidthClass} h-[22px] flex items-center justify-center text-sm font-bold leading-none text-[#1b1c1c] text-center select-none`;
           if (isSelected) {
-            datePillClass = `${pillWidthClass} h-[22px] rounded-full bg-[#b80000] text-white shadow-xs flex items-center justify-center ${fontSizeClass} font-bold leading-none text-center select-none`;
+            datePillClass = `${pillWidthClass} h-[22px] rounded-full bg-[#b80000] text-white shadow-xs flex items-center justify-center text-sm font-bold leading-none text-center select-none`;
           }
 
           cell.innerHTML = `

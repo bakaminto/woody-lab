@@ -304,13 +304,13 @@
             <span class="text-xs font-semibold leading-tight">07</span>
           </button>
           <button type="button" onclick="selectMockDay(this)"
-            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg text-[#5d403b]/70 hover:text-[#1b1c1c] active:scale-95 transition-all cursor-pointer">
-            <span class="text-[9px] font-bold uppercase tracking-wider opacity-50">Sa</span>
+            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg text-[#5d403b] hover:text-[#1b1c1c] active:scale-95 transition-all cursor-pointer">
+            <span class="text-[9px] font-bold uppercase tracking-wider opacity-60">Sa</span>
             <span class="text-xs font-semibold leading-tight">08</span>
           </button>
           <button type="button" onclick="selectMockDay(this)"
-            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg text-[#5d403b]/70 hover:text-[#1b1c1c] active:scale-95 transition-all cursor-pointer">
-            <span class="text-[9px] font-bold uppercase tracking-wider opacity-50">So</span>
+            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg text-[#5d403b] hover:text-[#1b1c1c] active:scale-95 transition-all cursor-pointer">
+            <span class="text-[9px] font-bold uppercase tracking-wider opacity-60">So</span>
             <span class="text-xs font-semibold leading-tight">09</span>
           </button>
         </div>
@@ -1527,8 +1527,6 @@
         const isSelected = isSameDate(dayDate, selectedDate);
         const dayPad = dayDate.getDate() < 10 ? `0${dayDate.getDate()}` : `${dayDate.getDate()}`;
         const dayName = DAY_NAMES[i];
-        const isWeekend = i >= 5;
-
         const btn = document.createElement("button");
         btn.type = "button";
         btn.onclick = () => selectDay(dayDate);
@@ -1539,9 +1537,9 @@
             <span class="text-xs font-bold leading-tight text-[#b80000]">${dayPad}</span>
           `;
         } else {
-          btn.className = `timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg ${isWeekend ? 'text-[#5d403b]/70' : 'text-[#5d403b]'} hover:text-[#1b1c1c] active:scale-95 transition-all cursor-pointer`;
+          btn.className = "timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg text-[#5d403b] hover:text-[#1b1c1c] active:scale-95 transition-all cursor-pointer";
           btn.innerHTML = `
-            <span class="text-[9px] font-bold uppercase tracking-wider ${isWeekend ? 'opacity-50' : 'opacity-60'}">${dayName}</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider opacity-60">${dayName}</span>
             <span class="text-xs font-semibold leading-tight">${dayPad}</span>
           `;
         }

@@ -181,11 +181,11 @@
       </div>
     </section>
 
-    <!-- VIEW 1C: CALENDAR VIEW (8-WEEK ROLLING HORIZON) -->
+    <!-- VIEW 1C: CALENDAR VIEW (5-COLUMN CONTINUOUS ROLLING GRID) -->
     <section id="viewCalendar" class="hidden pb-[calc(2rem+env(safe-area-inset-bottom,0px))] max-w-md mx-auto w-full">
       <div class="flex flex-col w-full">
-        <!-- 8 Rows x 7 Columns Rolling Grid with enhanced row spacing -->
-        <div class="grid grid-cols-7 gap-x-1.5 gap-y-2.5 w-full" id="calendarRollingGrid"></div>
+        <!-- 5 Columns Continuous Rolling Grid -->
+        <div class="grid grid-cols-5 gap-2.5 w-full" id="calendarRollingGrid"></div>
       </div>
     </section>
 
@@ -279,38 +279,38 @@
         <div class="bg-[#efeded] p-1 rounded-xl grid grid-cols-7 gap-0.5 w-full items-center" id="timelineDaysContainer">
           <button type="button" onclick="selectMockDay(this)"
             class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg text-[#5d403b] hover:text-[#1b1c1c] active:scale-95 transition-all cursor-pointer">
-            <span class="text-[9px] font-bold uppercase tracking-wider opacity-60">Mo</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider opacity-60">Mon</span>
             <span class="text-xs font-semibold leading-tight">03</span>
           </button>
           <button type="button" onclick="selectMockDay(this)"
             class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg text-[#5d403b] hover:text-[#1b1c1c] active:scale-95 transition-all cursor-pointer">
-            <span class="text-[9px] font-bold uppercase tracking-wider opacity-60">Di</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider opacity-60">Tue</span>
             <span class="text-xs font-semibold leading-tight">04</span>
           </button>
           <!-- Wednesday (Initial Active Day) -->
           <button type="button" onclick="selectMockDay(this)"
             class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg bg-white text-[#b80000] shadow-sm active:scale-95 transition-all cursor-pointer">
-            <span class="text-[9px] font-bold uppercase tracking-wider text-[#b80000]">Mi</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider text-[#b80000]">Wed</span>
             <span class="text-xs font-bold leading-tight text-[#b80000]">05</span>
           </button>
           <button type="button" onclick="selectMockDay(this)"
             class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg text-[#5d403b] hover:text-[#1b1c1c] active:scale-95 transition-all cursor-pointer">
-            <span class="text-[9px] font-bold uppercase tracking-wider opacity-60">Do</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider opacity-60">Thu</span>
             <span class="text-xs font-semibold leading-tight">06</span>
           </button>
           <button type="button" onclick="selectMockDay(this)"
             class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg text-[#5d403b] hover:text-[#1b1c1c] active:scale-95 transition-all cursor-pointer">
-            <span class="text-[9px] font-bold uppercase tracking-wider opacity-60">Fr</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider opacity-60">Fri</span>
             <span class="text-xs font-semibold leading-tight">07</span>
           </button>
           <button type="button" onclick="selectMockDay(this)"
             class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg text-[#5d403b] hover:text-[#1b1c1c] active:scale-95 transition-all cursor-pointer">
-            <span class="text-[9px] font-bold uppercase tracking-wider opacity-60">Sa</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider opacity-60">Sat</span>
             <span class="text-xs font-semibold leading-tight">08</span>
           </button>
           <button type="button" onclick="selectMockDay(this)"
             class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg text-[#5d403b] hover:text-[#1b1c1c] active:scale-95 transition-all cursor-pointer">
-            <span class="text-[9px] font-bold uppercase tracking-wider opacity-60">So</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider opacity-60">Sun</span>
             <span class="text-xs font-semibold leading-tight">09</span>
           </button>
         </div>
@@ -1464,7 +1464,7 @@
 
     // ==================== CALENDAR & TIMELINE STATE ====================
     const MONTH_NAMES = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
-    const DAY_NAMES = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
+    const DAY_NAMES = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
     // Selected Date state (defaults to Today's real date on fresh launch)
     const _initNow = new Date();
@@ -1581,9 +1581,10 @@
       }
     }
 
-    const CALENDAR_PAST_WEEKS = 12;
-    const CALENDAR_FUTURE_WEEKS = 40;
-    const CALENDAR_TOTAL_WEEKS = CALENDAR_PAST_WEEKS + CALENDAR_FUTURE_WEEKS; // 52 weeks = 1 full year
+    const CALENDAR_COLS = 5;
+    const CALENDAR_PAST_DAYS = 90; // 18 rows * 5 = 90 days (~13 weeks)
+    const CALENDAR_FUTURE_DAYS = 275; // 55 rows * 5 = 275 days (~39 weeks)
+    const CALENDAR_TOTAL_ROWS = 73; // 18 + 55 = 73 rows = 365 days (1 full year)
 
     // Percentage Transparency Helper for Out (Orange/Yellow #fbc02d) Badges (5 Opacity Steps: 0-20%, 21-40%, 41-60%, 61-80%, 81-100%)
     function getOutBadgeConfig(count, total = 20) {
@@ -1629,22 +1630,23 @@
     function getMockDayOccupancy(row, col, cellDate) {
       const TOTAL_FLEET = 20;
 
-      // 1. Designated quiet weeks (all devices in office)
-      if (row === 2 || row === 9 || row === 17 || row === 26 || row === 38 || row === 47) {
+      // 1. Designated quiet clusters (all devices in office)
+      if (row === 3 || row === 12 || row === 25 || row === 40 || row === 58) {
         return { out: 0, office: TOTAL_FLEET };
       }
 
       // 2. Designated peak dates (all devices out on job)
-      if ((row === 7 && (col === 2 || col === 3)) ||
-          (row === 13 && col === 1) ||
-          (row === 21 && (col === 3 || col === 4)) ||
-          (row === 30 && (col >= 2 && col <= 4)) ||
-          (row === 42 && col === 2)) {
+      if ((row === 6 && (col === 1 || col === 2)) ||
+          (row === 16 && col === 3) ||
+          (row === 29 && (col === 0 || col === 1)) ||
+          (row === 44 && col === 4) ||
+          (row === 62 && col === 2)) {
         return { out: TOTAL_FLEET, office: 0 };
       }
 
       // 3. Regular weekends frequently have all devices in office
-      const isWeekend = col >= 5;
+      const dayOfWeek = cellDate.getDay();
+      const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
       if (isWeekend && (row % 3 !== 0)) {
         return { out: 0, office: TOTAL_FLEET };
       }
@@ -1660,18 +1662,18 @@
       return { out: outCount, office: TOTAL_FLEET - outCount };
     }
 
-    // Render Continuous Multi-Week Rolling Calendar Grid
+    // Render Continuous 5-Column Rolling Calendar Grid
     function renderCalendarView() {
       const container = document.getElementById("calendarRollingGrid");
       if (!container) return;
       container.innerHTML = "";
 
-      const focalMonday = getMondayOfWeek(selectedDate);
-      const startDate = new Date(focalMonday.getFullYear(), focalMonday.getMonth(), focalMonday.getDate() - (CALENDAR_PAST_WEEKS * 7));
+      const calendarAnchor = getMondayOfWeek(_initNow);
+      const startDate = new Date(calendarAnchor.getFullYear(), calendarAnchor.getMonth(), calendarAnchor.getDate() - CALENDAR_PAST_DAYS);
 
-      for (let row = 0; row < CALENDAR_TOTAL_WEEKS; row++) {
-        for (let col = 0; col < 7; col++) {
-          const dayOffset = (row * 7) + col;
+      for (let row = 0; row < CALENDAR_TOTAL_ROWS; row++) {
+        for (let col = 0; col < CALENDAR_COLS; col++) {
+          const dayOffset = (row * CALENDAR_COLS) + col;
           const cellDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + dayOffset);
           const isSelected = isSameDate(cellDate, selectedDate);
 
@@ -1699,10 +1701,13 @@
 
           cell.className = `flex flex-col items-center justify-between py-1 rounded-xl overflow-hidden border ${borderClass} ${bgClass} shadow-xs active:scale-95 transition-all cursor-pointer h-[60px]`;
 
-          // Format date as 2 digits
-          const dateDisplay = cellDate.getDate() < 10 ? `0${cellDate.getDate()}` : `${cellDate.getDate()}`;
+          // Format weekday and date (e.g. "Mon 03", "Wed 05")
+          const dayIndex = (cellDate.getDay() + 6) % 7;
+          const dayName = DAY_NAMES[dayIndex];
+          const datePad = cellDate.getDate() < 10 ? `0${cellDate.getDate()}` : `${cellDate.getDate()}`;
+          const dateDisplay = `${dayName} ${datePad}`;
 
-          // Middle date band: wide pill (maximum width without touching day tile borders)
+          // Top date band: wide pill (maximum width without touching day tile borders)
           let datePillClass = "text-[#1b1c1c]";
           if (isSelected) {
             datePillClass = "bg-[#b80000] text-white rounded-full shadow-xs";
@@ -1717,9 +1722,9 @@
             : `<span class="w-10 py-0.5 rounded-full ${officeConf.bgClass} ${officeConf.textClass} font-bold text-xs leading-none text-center shadow-xs flex items-center justify-center">${officeConf.countText}</span>`;
 
           cell.innerHTML = `
-            <!-- Top: Wide Date pill (doesn't touch borders) -->
+            <!-- Top: Wide Date pill (with weekday and day number) -->
             <div class="flex items-center justify-center w-full px-1">
-              <span class="w-full py-0.5 text-xs font-bold leading-tight text-center ${datePillClass}">
+              <span class="w-full py-0.5 text-xs font-bold leading-tight text-center whitespace-nowrap ${datePillClass}">
                 ${dateDisplay}
               </span>
             </div>

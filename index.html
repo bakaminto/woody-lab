@@ -1695,19 +1695,22 @@
           const isFirstOfMonth = (cellDate.getDate() === 1);
           const dPad = cellDate.getDate() < 10 ? `0${cellDate.getDate()}` : `${cellDate.getDate()}`;
           let dateDisplay = dPad;
-          let pillWidthClass = "w-11";
 
           if (isFirstOfMonth) {
             const m = cellDate.getMonth() + 1;
             const mPad = m < 10 ? `0${m}` : `${m}`;
             dateDisplay = `${mPad}/${dPad}`;
-            pillWidthClass = "px-1.5 min-w-11";
           }
 
-          // Upper Row: Date display (uniform text-sm font size across all days, capsule pill matching status bar width)
-          let datePillClass = `${pillWidthClass} h-[22px] flex items-center justify-center text-sm font-bold leading-none text-[#1b1c1c] text-center select-none`;
-          if (isSelected) {
-            datePillClass = `${pillWidthClass} h-[22px] rounded-full bg-[#b80000] text-white shadow-xs flex items-center justify-center text-sm font-bold leading-none text-center select-none`;
+          // Demo preview: test standard w-11 un-widened red pill on 11/01, 12/01, and selected date
+          const isNovFirst = (cellDate.getMonth() === 10 && cellDate.getDate() === 1);
+          const isDecFirst = (cellDate.getMonth() === 11 && cellDate.getDate() === 1);
+          const showRedPill = isSelected || isNovFirst || isDecFirst;
+
+          // Upper Row: Date display (fixed w-11 capsule pill matching status bar width for all dates)
+          let datePillClass = "w-11 h-[22px] flex items-center justify-center text-sm font-bold leading-none text-[#1b1c1c] text-center select-none";
+          if (showRedPill) {
+            datePillClass = "w-11 h-[22px] rounded-full bg-[#b80000] text-white shadow-xs flex items-center justify-center text-sm font-bold leading-none text-center select-none";
           }
 
           cell.innerHTML = `

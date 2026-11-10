@@ -625,7 +625,7 @@
         if (!dev) {
           const emptyCell = document.createElement("div");
           emptyCell.className = "flex flex-col items-center justify-center w-full h-[58px] rounded-2xl border-2 border-dashed border-[#9e9e9e] text-[#9e9e9e] select-none cursor-default";
-          emptyCell.innerHTML = `<span class="font-bold text-sm leading-none">--</span><span class="text-[10px] font-semibold opacity-70 mt-1">${slot.slot_tag}</span>`;
+          emptyCell.innerHTML = `<span class="font-bold text-sm leading-none">--</span><span class="text-xs font-semibold leading-tight mt-1">${slot.slot_tag}</span>`;
           container.appendChild(emptyCell);
           return;
         }
@@ -634,14 +634,14 @@
           inactiveCount++;
           const inactiveCell = document.createElement("div");
           inactiveCell.className = "flex flex-col items-center justify-center w-full h-[58px] rounded-2xl bg-[#dbdad9] text-[#1b1c1c] shadow-xs select-none cursor-default";
-          inactiveCell.innerHTML = `<span class="font-bold text-sm leading-none truncate max-w-full px-1">${dev.label}</span><span class="text-[10px] font-semibold opacity-70 mt-1">${slot.slot_tag}</span>`;
+          inactiveCell.innerHTML = `<span class="font-bold text-sm leading-none truncate max-w-full px-1">${dev.label}</span><span class="text-xs font-semibold leading-tight mt-1">${slot.slot_tag}</span>`;
           container.appendChild(inactiveCell);
         } else if (dev.status === "out") {
           outCount++;
           const btn = document.createElement("button");
           btn.type = "button";
           btn.className = "flex flex-col items-center justify-center w-full h-[58px] rounded-2xl bg-[#fbc02d] text-[#1a1a1a] shadow-xs hover:brightness-105 active:scale-95 transition-all select-none cursor-pointer";
-          btn.innerHTML = `<span class="font-bold text-sm leading-none truncate max-w-full px-1">${dev.label}</span><span class="text-[10px] font-semibold opacity-80 mt-1">${slot.slot_tag}</span>`;
+          btn.innerHTML = `<span class="font-bold text-sm leading-none truncate max-w-full px-1">${dev.label}</span><span class="text-xs font-semibold leading-tight mt-1">${slot.slot_tag}</span>`;
           btn.onclick = () => switchView("detail", { id: dev.id });
           container.appendChild(btn);
         } else {
@@ -649,7 +649,7 @@
           const btn = document.createElement("button");
           btn.type = "button";
           btn.className = "flex flex-col items-center justify-center w-full h-[58px] rounded-2xl bg-[#2e7d32] text-white shadow-xs hover:brightness-105 active:scale-95 transition-all select-none cursor-pointer";
-          btn.innerHTML = `<span class="font-bold text-sm leading-none truncate max-w-full px-1">${dev.label}</span><span class="text-[10px] font-semibold opacity-80 mt-1">${slot.slot_tag}</span>`;
+          btn.innerHTML = `<span class="font-bold text-sm leading-none truncate max-w-full px-1">${dev.label}</span><span class="text-xs font-semibold leading-tight mt-1">${slot.slot_tag}</span>`;
           btn.onclick = () => switchView("detail", { id: dev.id });
           container.appendChild(btn);
         }

@@ -1691,28 +1691,27 @@
 
           cell.className = `flex flex-col items-center justify-center py-2 rounded-2xl overflow-hidden border ${borderClass} ${bgClass} shadow-xs active:scale-95 transition-all cursor-pointer h-[58px]`;
 
-          // Format weekday and date (e.g. "Mon 03", "Wed 05")
-          const dayIndex = (cellDate.getDay() + 6) % 7;
-          const dayName = DAY_NAMES[dayIndex];
+          // Format 2-digit date (e.g. "03", "14")
           const datePad = cellDate.getDate() < 10 ? `0${cellDate.getDate()}` : `${cellDate.getDate()}`;
-          const dateDisplay = `${dayName} ${datePad}`;
+          const isMonday = (cellDate.getDay() === 1);
+          const weightClass = isMonday ? "font-black" : "font-medium";
 
-          // Upper Row: Date display (floating crimson pill when selected)
-          let datePillClass = "text-xs font-bold leading-tight text-[#1b1c1c] text-center whitespace-nowrap";
+          // Upper Row: Date display (floating crimson circle when selected; bold anchor on Mondays)
+          let datePillClass = `w-7 h-7 flex items-center justify-center text-[15px] leading-none ${weightClass} text-[#1b1c1c] text-center select-none`;
           if (isSelected) {
-            datePillClass = "px-2 py-0.5 text-xs font-bold leading-tight text-white bg-[#b80000] rounded-full shadow-xs text-center whitespace-nowrap";
+            datePillClass = `w-7 h-7 rounded-full bg-[#b80000] text-white shadow-xs flex items-center justify-center text-[15px] leading-none ${weightClass} text-center select-none`;
           }
 
           cell.innerHTML = `
-            <!-- Upper Row: Date (Weekday + Day Number) -->
-            <div class="flex items-center justify-center w-full h-[22px]">
+            <!-- Upper Row: Date Number (bolder on Mondays) -->
+            <div class="flex items-center justify-center w-full h-7">
               <span class="${datePillClass}">
-                ${dateDisplay}
+                ${datePad}
               </span>
             </div>
 
             <!-- Bottom Row: 5-Segment Merged Status Pill (Green Office + Yellow Out) -->
-            <div class="flex items-center justify-center w-full mt-1.5">
+            <div class="flex items-center justify-center w-full mt-1">
               ${renderSegmentedBarHtml(seg.greenSegments, seg.yellowSegments)}
             </div>
           `;

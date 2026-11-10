@@ -1586,44 +1586,35 @@
     const CALENDAR_FUTURE_DAYS = 275; // 55 rows * 5 = 275 days (~39 weeks)
     const CALENDAR_TOTAL_ROWS = 73; // 18 + 55 = 73 rows = 365 days (1 full year)
 
-    // Percentage Transparency Helper for Out (Orange/Yellow #fbc02d) Badges (5 Opacity Steps: 0-20%, 21-40%, 41-60%, 61-80%, 81-100%)
-    function getOutBadgeConfig(count, total = 20) {
-      if (count <= 0) {
-        return { isZero: true, bgClass: "", textClass: "", countText: "" };
+    // Calculate 5-segment merged status pill: Office (Green #2e7d32) + Out (Yellow #fbc02d)
+    // 5 segments, 20% steps. 100% green is 0% yellow. Full office is full green, full out is full yellow.
+    function getMergedSegmentCounts(outCount, officeCount, total = 20) {
+      if (outCount <= 0) {
+        return { greenSegments: 5, yellowSegments: 0 };
       }
-      const pct = (count / total) * 100;
-      if (pct <= 20) {
-        return { isZero: false, bgClass: "bg-[#fbc02d]/20", textClass: "text-[#1a1a1a]", countText: String(count) };
-      } else if (pct <= 40) {
-        return { isZero: false, bgClass: "bg-[#fbc02d]/40", textClass: "text-[#1a1a1a]", countText: String(count) };
-      } else if (pct <= 60) {
-        return { isZero: false, bgClass: "bg-[#fbc02d]/60", textClass: "text-[#1a1a1a]", countText: String(count) };
-      } else if (pct <= 80) {
-        return { isZero: false, bgClass: "bg-[#fbc02d]/80", textClass: "text-[#1a1a1a]", countText: String(count) };
-      } else {
-        // Full original solid color (81-100%)
-        return { isZero: false, bgClass: "bg-[#fbc02d]", textClass: "text-[#1a1a1a]", countText: String(count) };
+      if (officeCount <= 0 || outCount >= total) {
+        return { greenSegments: 0, yellowSegments: 5 };
       }
+      let yellowSegments = Math.round((outCount / total) * 5);
+      if (yellowSegments <= 0) yellowSegments = 1;
+      if (yellowSegments >= 5) yellowSegments = 4;
+      const greenSegments = 5 - yellowSegments;
+      return { greenSegments, yellowSegments };
     }
 
-    // Percentage Transparency Helper for Office (Green #2e7d32) Badges (5 Opacity Steps: 0-20%, 21-40%, 41-60%, 61-80%, 81-100%)
-    function getOfficeBadgeConfig(count, total = 20) {
-      if (count <= 0) {
-        return { isZero: true, bgClass: "", textClass: "", countText: "" };
+    function renderSegmentedBarHtml(greenSegments, yellowSegments) {
+      let segments = "";
+      for (let i = 0; i < greenSegments; i++) {
+        segments += `<div class="flex-1 h-full bg-[#2e7d32]"></div>`;
       }
-      const pct = (count / total) * 100;
-      if (pct <= 20) {
-        return { isZero: false, bgClass: "bg-[#2e7d32]/20", textClass: "text-[#14532d]", countText: String(count) };
-      } else if (pct <= 40) {
-        return { isZero: false, bgClass: "bg-[#2e7d32]/40", textClass: "text-[#14532d]", countText: String(count) };
-      } else if (pct <= 60) {
-        return { isZero: false, bgClass: "bg-[#2e7d32]/60", textClass: "text-white", countText: String(count) };
-      } else if (pct <= 80) {
-        return { isZero: false, bgClass: "bg-[#2e7d32]/85", textClass: "text-white", countText: String(count) };
-      } else {
-        // Full original solid color (81-100%)
-        return { isZero: false, bgClass: "bg-[#2e7d32]", textClass: "text-white", countText: String(count) };
+      for (let i = 0; i < yellowSegments; i++) {
+        segments += `<div class="flex-1 h-full bg-[#fbc02d]"></div>`;
       }
+      return `
+        <div class="flex items-center w-11 h-2.5 rounded-full overflow-hidden shadow-2xs gap-[1px] bg-black/15">
+          ${segments}
+        </div>
+      `;
     }
 
     // Deterministic simulation generator covering realistic office clusters, partial bookings, and peak all-out dates
@@ -1662,7 +1653,7 @@
       return { out: outCount, office: TOTAL_FLEET - outCount };
     }
 
-    // Render Continuous 5-Column Rolling Calendar Grid
+    // Render Continuous 5-Column Rolling Calendar Grid (2-Row Style)
     function renderCalendarView() {
       const container = document.getElementById("calendarRollingGrid");
       if (!container) return;
@@ -1679,8 +1670,7 @@
 
           // Deterministic device occupancy per date
           const occ = getMockDayOccupancy(row, col, cellDate);
-          const outConf = getOutBadgeConfig(occ.out);
-          const officeConf = getOfficeBadgeConfig(occ.office);
+          const seg = getMergedSegmentCounts(occ.out, occ.office, 20);
 
           const dateKey = `${cellDate.getFullYear()}-${String(cellDate.getMonth() + 1).padStart(2, '0')}-${String(cellDate.getDate()).padStart(2, '0')}`;
 
@@ -1699,7 +1689,7 @@
           const bgClass = isEvenMonth ? "bg-[#f5f4f4]" : "bg-[#eae8e8]";
           const borderClass = isEvenMonth ? "border-[#e3e1e1]" : "border-[#dad8d8]";
 
-          cell.className = `flex flex-col items-center justify-between py-1 rounded-xl overflow-hidden border ${borderClass} ${bgClass} shadow-xs active:scale-95 transition-all cursor-pointer h-[60px]`;
+          cell.className = `flex flex-col items-center justify-center py-2 rounded-2xl overflow-hidden border ${borderClass} ${bgClass} shadow-xs active:scale-95 transition-all cursor-pointer h-[58px]`;
 
           // Format weekday and date (e.g. "Mon 03", "Wed 05")
           const dayIndex = (cellDate.getDay() + 6) % 7;
@@ -1707,36 +1697,23 @@
           const datePad = cellDate.getDate() < 10 ? `0${cellDate.getDate()}` : `${cellDate.getDate()}`;
           const dateDisplay = `${dayName} ${datePad}`;
 
-          // Top date band: wide pill (maximum width without touching day tile borders)
-          let datePillClass = "text-[#1b1c1c]";
+          // Upper Row: Date display (floating crimson pill when selected)
+          let datePillClass = "text-xs font-bold leading-tight text-[#1b1c1c] text-center whitespace-nowrap";
           if (isSelected) {
-            datePillClass = "bg-[#b80000] text-white rounded-full shadow-xs";
+            datePillClass = "px-2 py-0.5 text-xs font-bold leading-tight text-white bg-[#b80000] rounded-full shadow-xs text-center whitespace-nowrap";
           }
 
-          const outBadgeHtml = outConf.isZero
-            ? `<span class="w-10 h-[17px] invisible select-none"></span>`
-            : `<span class="w-10 py-0.5 rounded-full ${outConf.bgClass} ${outConf.textClass} font-bold text-xs leading-none text-center shadow-xs flex items-center justify-center">${outConf.countText}</span>`;
-
-          const officeBadgeHtml = officeConf.isZero
-            ? `<span class="w-10 h-[17px] invisible select-none"></span>`
-            : `<span class="w-10 py-0.5 rounded-full ${officeConf.bgClass} ${officeConf.textClass} font-bold text-xs leading-none text-center shadow-xs flex items-center justify-center">${officeConf.countText}</span>`;
-
           cell.innerHTML = `
-            <!-- Top: Wide Date pill (with weekday and day number) -->
-            <div class="flex items-center justify-center w-full px-1">
-              <span class="w-full py-0.5 text-xs font-bold leading-tight text-center whitespace-nowrap ${datePillClass}">
+            <!-- Upper Row: Date (Weekday + Day Number) -->
+            <div class="flex items-center justify-center w-full h-[22px]">
+              <span class="${datePillClass}">
                 ${dateDisplay}
               </span>
             </div>
 
-            <!-- Middle: 4-letter width Yellow pill (Out count) -->
-            <div class="flex items-center justify-center w-full h-[18px]">
-              ${outBadgeHtml}
-            </div>
-
-            <!-- Bottom: 4-letter width Green pill (Office count) -->
-            <div class="flex items-center justify-center w-full h-[18px]">
-              ${officeBadgeHtml}
+            <!-- Bottom Row: 5-Segment Merged Status Pill (Green Office + Yellow Out) -->
+            <div class="flex items-center justify-center w-full mt-1.5">
+              ${renderSegmentedBarHtml(seg.greenSegments, seg.yellowSegments)}
             </div>
           `;
 

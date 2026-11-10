@@ -315,10 +315,8 @@
           </button>
         </div>
 
-        <!-- Row 2: Month, Year, and Calendar Week (CW) Metadata -->
+        <!-- Row 2: Year and Calendar Week (CW) Metadata -->
         <div class="flex items-center justify-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-[#1b1c1c]">
-          <span id="timelineMonthLabel">NOV</span>
-          <span class="opacity-30">•</span>
           <span id="timelineYearLabel">2026</span>
           <span class="opacity-30">•</span>
           <span id="timelineCwLabel">CW #45</span>
@@ -1478,7 +1476,7 @@
       } else {
         const dPad = selectedDate.getDate() < 10 ? `0${selectedDate.getDate()}` : `${selectedDate.getDate()}`;
         const mPad = (selectedDate.getMonth() + 1) < 10 ? `0${selectedDate.getMonth() + 1}` : `${selectedDate.getMonth() + 1}`;
-        tabMonth.textContent = `${dPad}/${mPad}`;
+        tabMonth.textContent = `${mPad}/${dPad}`;
       }
     }
 
@@ -1546,9 +1544,7 @@
         container.appendChild(btn);
       }
 
-      // Metadata Row
-      const monthLabel = document.getElementById("timelineMonthLabel");
-      if (monthLabel) monthLabel.textContent = MONTH_NAMES[selectedDate.getMonth()];
+      // Metadata Row (Year and CW only)
       const yearLabel = document.getElementById("timelineYearLabel");
       if (yearLabel) yearLabel.textContent = selectedDate.getFullYear();
       const cwLabel = document.getElementById("timelineCwLabel");
@@ -1602,13 +1598,15 @@
       return { greenSegments, yellowSegments };
     }
 
-    function renderSegmentedBarHtml(greenSegments, yellowSegments) {
+    function renderSegmentedBarHtml(yellowSegments, greenSegments) {
       let segments = "";
-      for (let i = 0; i < greenSegments; i++) {
-        segments += `<div class="flex-1 h-full bg-[#2e7d32]"></div>`;
-      }
+      // Yellow (Out) on the left
       for (let i = 0; i < yellowSegments; i++) {
         segments += `<div class="flex-1 h-full bg-[#fbc02d]"></div>`;
+      }
+      // Green (Office) on the right
+      for (let i = 0; i < greenSegments; i++) {
+        segments += `<div class="flex-1 h-full bg-[#2e7d32]"></div>`;
       }
       return `
         <div class="flex items-center w-11 h-2.5 rounded-full overflow-hidden shadow-2xs gap-[1px] bg-black/15">
@@ -1695,22 +1693,19 @@
           const isFirstOfMonth = (cellDate.getDate() === 1);
           const dPad = cellDate.getDate() < 10 ? `0${cellDate.getDate()}` : `${cellDate.getDate()}`;
           let dateDisplay = dPad;
+          let pillWidthClass = "w-11";
 
           if (isFirstOfMonth) {
             const m = cellDate.getMonth() + 1;
             const mPad = m < 10 ? `0${m}` : `${m}`;
             dateDisplay = `${mPad}/${dPad}`;
+            pillWidthClass = "px-2 min-w-11";
           }
 
-          // Demo preview: test standard w-11 un-widened red pill on 11/01, 12/01, and selected date
-          const isNovFirst = (cellDate.getMonth() === 10 && cellDate.getDate() === 1);
-          const isDecFirst = (cellDate.getMonth() === 11 && cellDate.getDate() === 1);
-          const showRedPill = isSelected || isNovFirst || isDecFirst;
-
-          // Upper Row: Date display (fixed w-11 capsule pill matching status bar width for all dates)
-          let datePillClass = "w-11 h-[22px] flex items-center justify-center text-sm font-bold leading-none text-[#1b1c1c] text-center select-none";
-          if (showRedPill) {
-            datePillClass = "w-11 h-[22px] rounded-full bg-[#b80000] text-white shadow-xs flex items-center justify-center text-sm font-bold leading-none text-center select-none";
+          // Upper Row: Date display (capsule pill matching status bar width, widened if first of month)
+          let datePillClass = `${pillWidthClass} h-[22px] flex items-center justify-center text-sm font-bold leading-none text-[#1b1c1c] text-center select-none`;
+          if (isSelected) {
+            datePillClass = `${pillWidthClass} h-[22px] rounded-full bg-[#b80000] text-white shadow-xs flex items-center justify-center text-sm font-bold leading-none text-center select-none`;
           }
 
           cell.innerHTML = `
@@ -1721,9 +1716,9 @@
               </span>
             </div>
 
-            <!-- Bottom Row: 5-Segment Merged Status Pill (Green Office + Yellow Out) -->
+            <!-- Bottom Row: 5-Segment Merged Status Pill (Yellow Out on Left + Green Office on Right) -->
             <div class="flex items-center justify-center w-full mt-1.5">
-              ${renderSegmentedBarHtml(seg.greenSegments, seg.yellowSegments)}
+              ${renderSegmentedBarHtml(seg.yellowSegments, seg.greenSegments)}
             </div>
           `;
 

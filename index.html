@@ -270,13 +270,13 @@
   <!-- ==================== TIMELINE FOOTER (FIXED BOTTOM HORIZONTAL DATE CAROUSEL) ==================== -->
   <footer id="timelineFooter"
     class="fixed bottom-0 inset-x-0 z-40 bg-[#fbf9f9] border-t border-[#e9e8e7] px-3 pt-1 pb-[calc(0.625rem+env(safe-area-inset-bottom,0px))] shadow-lg select-none">
-    <div id="timelineFooterInner" class="max-w-md mx-auto relative">
-      <!-- Stationary center snap slot cradle -->
-      <div aria-hidden="true"
-        class="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[72px] h-[72px] rounded-2xl bg-[#efeded] border border-[#dad8d8] z-0"></div>
-      <!-- Scrollable center-snapped square day badges -->
-      <div id="timelineDaysContainer"
-        class="relative z-10 h-[88px] flex items-center gap-2.5 overflow-x-auto no-scrollbar snap-x snap-mandatory"></div>
+    <div id="timelineFooterInner" class="max-w-md mx-auto relative h-[88px] flex items-center">
+      <!-- Dark grey strip matching Calendar event backdrop -->
+      <div class="w-full h-[74px] rounded-2xl border border-[#3f3f3f] bg-[#525252] overflow-hidden">
+        <!-- Scrollable center-snapped square day badges -->
+        <div id="timelineDaysContainer"
+          class="relative w-full h-full rounded-[15px] flex items-center gap-2.5 overflow-x-auto no-scrollbar snap-x snap-mandatory"></div>
+      </div>
     </div>
   </footer>
 

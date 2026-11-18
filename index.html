@@ -347,9 +347,9 @@
 
   <!-- ==================== CALENDAR EVENT FOOTER (FIXED BOTTOM) ==================== -->
   <footer id="calendarFooter"
-    class="fixed bottom-0 inset-x-0 z-40 bg-[#fbf9f9] border-t border-[#e9e8e7] px-3 pt-1.5 pb-[calc(1.25rem+env(safe-area-inset-bottom,0px))] shadow-lg select-none hidden">
+    class="fixed bottom-0 inset-x-0 z-40 bg-[#fbf9f9] border-t border-[#e9e8e7] px-3 pt-1 pb-[calc(0.625rem+env(safe-area-inset-bottom,0px))] shadow-lg select-none hidden">
     <div class="max-w-md mx-auto">
-      <div id="calendarEventsTrack" class="relative h-[75px] flex items-center gap-2.5 overflow-x-auto no-scrollbar px-0.5"></div>
+      <div id="calendarEventsTrack" class="relative h-[88px] flex items-center gap-2.5 overflow-x-auto no-scrollbar px-0.5"></div>
     </div>
   </footer>
 
@@ -3456,17 +3456,20 @@
           ? `<div aria-hidden="true" class="pointer-events-none absolute -inset-[4px] rounded-2xl border border-[#3f3f3f] bg-[#525252] z-0"></div>`
           : "";
         const cardClass = isPast
-          ? "relative z-10 w-full p-3 rounded-xl border border-[#e9e8e7] bg-[#f9f8f8] hover:bg-[#f2f1f1] flex flex-col items-start justify-center text-left transition-all group-active:scale-95"
-          : "relative z-10 w-full p-3 rounded-xl border border-[#e9e8e7] bg-white shadow-sm hover:border-[#d5d3d2] flex flex-col items-start justify-center text-left transition-all group-active:scale-95";
+          ? "w-full p-3 rounded-xl border border-[#e9e8e7] bg-[#f9f8f8] hover:bg-[#f2f1f1] flex flex-col items-start justify-center text-left transition-colors"
+          : "w-full p-3 rounded-xl border border-[#e9e8e7] bg-white shadow-sm hover:border-[#d5d3d2] flex flex-col items-start justify-center text-left transition-colors";
+        const custHeaderColor = isSelected ? "text-white" : (isPast ? "text-[#9e9e9e]" : "text-[#5d403b]");
         const titleColor = isPast ? "text-[#9e9e9e]" : "text-[#1b1c1c]";
-        const custColor = isPast ? "text-[#9e9e9e] font-normal" : "text-[#5d403b]/70 font-normal";
         const metaColor = isPast ? "text-[#9e9e9e]" : "text-[#5d403b]";
 
         chip.innerHTML = `
           ${outlineHtml}
-          <div class="${cardClass}">
-            <span class="text-sm font-semibold ${titleColor} truncate w-full">${escapeHtml(ev.name)}${custName ? `<span class="${custColor}"> &bull; ${escapeHtml(custName)}</span>` : ""}</span>
-            <span class="text-xs ${metaColor} mt-0.5 whitespace-nowrap">${dateSpan}</span>
+          <div class="relative z-10 w-full flex flex-col items-start transition-transform group-active:scale-95">
+            <span class="w-full px-1 text-[10px] font-bold uppercase tracking-wider leading-[11px] mb-[3px] truncate text-left ${custHeaderColor}">${custName ? escapeHtml(custName) : "&nbsp;"}</span>
+            <div class="${cardClass}">
+              <span class="text-sm font-semibold ${titleColor} truncate w-full">${escapeHtml(ev.name)}</span>
+              <span class="text-xs ${metaColor} mt-0.5 whitespace-nowrap">${dateSpan}</span>
+            </div>
           </div>
         `;
         track.appendChild(chip);

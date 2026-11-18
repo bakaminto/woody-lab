@@ -269,14 +269,11 @@
 
   <!-- ==================== TIMELINE FOOTER (FIXED BOTTOM HORIZONTAL DATE CAROUSEL) ==================== -->
   <footer id="timelineFooter"
-    class="fixed bottom-0 inset-x-0 z-40 bg-[#525252] border-t border-[#3f3f3f] px-3 pt-1 pb-[calc(0.625rem+env(safe-area-inset-bottom,0px))] shadow-lg select-none">
-    <div id="timelineFooterInner" class="max-w-md mx-auto relative h-[88px] flex items-center">
-      <!-- Dark grey strip matching Calendar event backdrop -->
-      <div class="w-full h-[74px] rounded-2xl border border-[#3f3f3f] bg-[#525252] overflow-hidden">
-        <!-- Scrollable center-snapped square day badges -->
-        <div id="timelineDaysContainer"
-          class="relative w-full h-full rounded-[15px] flex items-center gap-2.5 overflow-x-auto no-scrollbar snap-x snap-mandatory"></div>
-      </div>
+    class="fixed bottom-0 inset-x-0 z-40 bg-[#fbf9f9] border-t border-[#e9e8e7] px-3 pt-1 pb-[calc(0.625rem+env(safe-area-inset-bottom,0px))] shadow-lg select-none">
+    <div id="timelineFooterInner" class="max-w-md mx-auto">
+      <!-- Scrollable center-snapped day badges matching Calendar event badge frame -->
+      <div id="timelineDaysContainer"
+        class="relative h-[88px] flex items-center gap-2 overflow-x-auto no-scrollbar snap-x snap-mandatory"></div>
     </div>
   </footer>
 
@@ -3547,32 +3544,32 @@
         ? `${dayDate.getMonth() + 1 < 10 ? "0" : ""}${dayDate.getMonth() + 1}/${dPad}`
         : dPad;
 
-      let cardStateClass = "";
-      if (isSelected) {
-        cardStateClass = "bg-white border-[6px] border-[#b80000] shadow-sm";
-      } else if (isPast) {
-        cardStateClass = "bg-[#f9f8f8] border border-[#e9e8e7] hover:bg-[#f2f1f1]";
-      } else {
-        cardStateClass = "bg-white border border-[#e9e8e7] shadow-sm hover:border-[#d5d3d2]";
-      }
-      chip.className = `timeline-day-btn shrink-0 snap-center w-16 h-16 rounded-xl flex flex-col items-center justify-center cursor-pointer select-none transition-all active:scale-95 ${cardStateClass}`;
+      chip.className = "timeline-day-btn shrink-0 snap-center group p-[3px] rounded-2xl border border-[#3f3f3f] bg-[#525252] flex flex-col items-center cursor-pointer select-none focus:outline-none";
 
-      const weekdayColor = (isToday || isSelected)
-        ? "text-[#b80000]"
-        : (isPast ? "text-[#9e9e9e]" : "text-[#5d403b]");
+      const headerColor = (isPast && !isSelected && !isToday) ? "text-white/70" : "text-white";
+      let boxStateClass = "";
+      if (isSelected) {
+        boxStateClass = "bg-white border-[6px] border-[#b80000] shadow-sm";
+      } else if (isPast) {
+        boxStateClass = "bg-[#f9f8f8] border border-[#e9e8e7] group-hover:bg-[#f2f1f1]";
+      } else {
+        boxStateClass = "bg-white border border-[#e9e8e7] shadow-sm group-hover:border-[#d5d3d2]";
+      }
 
       let dateHtml = "";
       if (isToday) {
-        dateHtml = `<span class="mt-1 py-0.5 rounded-full bg-[#b80000] text-white ${isFirstOfMonth ? "px-1.5 text-xs" : "px-2 text-sm"} font-bold leading-none">${dateDisplay}</span>`;
+        dateHtml = `<span class="rounded-full bg-[#b80000] text-white ${isFirstOfMonth ? "px-1.5 py-0.5 text-xs" : "px-2.5 py-0.5 text-base"} font-bold leading-none">${dateDisplay}</span>`;
       } else {
         const numColor = isSelected ? "text-[#b80000]" : (isPast ? "text-[#9e9e9e]" : "text-[#1b1c1c]");
-        const numSize = isFirstOfMonth ? "text-sm" : "text-base";
-        dateHtml = `<span class="mt-1 ${numSize} font-bold leading-none ${numColor}">${dateDisplay}</span>`;
+        const numSize = isFirstOfMonth ? "text-sm" : "text-xl";
+        dateHtml = `<span class="${numSize} font-bold leading-none ${numColor}">${dateDisplay}</span>`;
       }
 
       chip.innerHTML = `
-        <span class="text-[10px] font-bold uppercase tracking-wider leading-none ${weekdayColor}">${dayName}</span>
-        ${dateHtml}
+        <span class="w-full px-1 text-[10px] font-bold uppercase tracking-wider leading-[11px] mb-[3px] text-center ${headerColor}">${dayName}</span>
+        <div class="w-16 h-16 rounded-xl flex items-center justify-center transition-all group-active:scale-95 ${boxStateClass}">
+          ${dateHtml}
+        </div>
       `;
     }
 
@@ -3630,7 +3627,7 @@
         container.innerHTML = "";
         const startSpacer = document.createElement("div");
         startSpacer.setAttribute("aria-hidden", "true");
-        startSpacer.className = "shrink-0 w-[calc(50%-42px)] h-1 pointer-events-none";
+        startSpacer.className = "shrink-0 w-[calc(50%-44px)] h-1 pointer-events-none";
         container.appendChild(startSpacer);
 
         for (let i = 0; i < totalDays; i++) {
@@ -3647,7 +3644,7 @@
 
         const endSpacer = document.createElement("div");
         endSpacer.setAttribute("aria-hidden", "true");
-        endSpacer.className = "shrink-0 w-[calc(50%-42px)] h-1 pointer-events-none";
+        endSpacer.className = "shrink-0 w-[calc(50%-44px)] h-1 pointer-events-none";
         container.appendChild(endSpacer);
 
         timelineRenderedMeta = { startKey, endKey, todayKey, activeKey: selectedKey };

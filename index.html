@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
     name="viewport">
-  <title>Woody Devices Dev</title>
+  <title>Woody Devices Lab</title>
 
   <!-- PWA & Shortcut Icon Metadata -->
   <link rel="manifest" href="manifest.json">
@@ -14,7 +14,7 @@
   <meta name="theme-color" content="#fbf9f9">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Woody Dev">
+  <meta name="apple-mobile-web-app-title" content="Woody Lab">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,6 +37,15 @@
 
     .font-code {
       font-family: 'Roboto Flex', monospace;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
 
     #timelineFooterInner.invisible,
@@ -164,7 +173,7 @@
     </section>
 
     <!-- VIEW 1C: CALENDAR VIEW (5-COLUMN CONTINUOUS ROLLING GRID) -->
-    <section id="viewCalendar" class="hidden pb-[calc(2rem+env(safe-area-inset-bottom,0px))] max-w-md mx-auto w-full">
+    <section id="viewCalendar" class="hidden pb-[calc(106px+env(safe-area-inset-bottom,0px))] max-w-md mx-auto w-full">
       <div class="flex flex-col w-full">
         <!-- 5 Columns Continuous Rolling Grid -->
         <div class="grid grid-cols-5 gap-2.5 w-full" id="calendarRollingGrid"></div>
@@ -333,6 +342,14 @@
         </svg>
       </button>
 
+    </div>
+  </footer>
+
+  <!-- ==================== CALENDAR EVENT FOOTER (FIXED BOTTOM) ==================== -->
+  <footer id="calendarFooter"
+    class="fixed bottom-0 inset-x-0 z-40 bg-[#fbf9f9] border-t border-[#e9e8e7] px-3 pt-2.5 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))] shadow-lg select-none hidden">
+    <div class="max-w-md mx-auto bg-[#efeded] p-1 rounded-2xl">
+      <div id="calendarEventsTrack" class="flex items-center gap-1 overflow-x-auto no-scrollbar scroll-smooth"></div>
     </div>
   </footer>
 
@@ -523,7 +540,7 @@
         the offline cache.
       ======================================================================
     */
-    const APP_VERSION = "v2.0-dev.5";
+    const APP_VERSION = "v2.0-lab.1";
     <!-- antigravity sync test -->
 
     const CUSTOMER_PLACEHOLDER_NAME = "<change customer name>";
@@ -924,16 +941,82 @@
       return data;
     }
 
-    const STORAGE_KEY = "fleet_ledger_data_dev";
+    const STORAGE_KEY = "fleet_ledger_data_lab";
+
+    function createLabSeedData() {
+      const todayKey = formatDateInputValue(getTodayAnchor());
+      const slots = [];
+      for (let i = 1; i <= 15; i++) {
+        const pad = i < 10 ? `0${i}` : `${i}`;
+        slots.push({
+          slot_number: i,
+          slot_tag: `#${pad}`,
+          device_id: i <= 8 ? `lab_d${i}` : null
+        });
+      }
+
+      const devices = [
+        { id: "lab_d1", label: "LZ01", is_active: true, type: "LZ" },
+        { id: "lab_d2", label: "LZ02", is_active: true, type: "LZ" },
+        { id: "lab_d3", label: "LZ03", is_active: true, type: "LZ" },
+        { id: "lab_d4", label: "LZ04", is_active: true, type: "LZ" },
+        { id: "lab_d5", label: "LZ05", is_active: true, type: "LZ" },
+        { id: "lab_d6", label: "LL01", is_active: true, type: "LL" },
+        { id: "lab_d7", label: "LL02", is_active: true, type: "LL" },
+        { id: "lab_d8", label: "RET8", is_active: false, type: "LL" }
+      ];
+
+      const customers = [
+        { id: "lab_c1", name: "Acme Events", is_active: true },
+        { id: "lab_c2", name: "Beta Stage", is_active: true },
+        { id: "lab_c3", name: "Gamma Audio", is_active: true },
+        { id: "lab_c4", name: "Nordic Light", is_active: true }
+      ];
+
+      const evPastStart = addDaysToDateKey(todayKey, -18);
+      const evPastEnd = addDaysToDateKey(todayKey, -15);
+      const evDueStart = addDaysToDateKey(todayKey, -6);
+      const evDueEnd = addDaysToDateKey(todayKey, -3);
+      const evNowStart = addDaysToDateKey(todayKey, -1);
+      const evNowEnd = addDaysToDateKey(todayKey, 2);
+      const evNextStart = addDaysToDateKey(todayKey, 1);
+      const evNextEnd = addDaysToDateKey(todayKey, 4);
+      const evTourStart = addDaysToDateKey(todayKey, 8);
+      const evTourEnd = addDaysToDateKey(todayKey, 12);
+      const evFarStart = addDaysToDateKey(todayKey, 25);
+      const evFarEnd = addDaysToDateKey(todayKey, 27);
+
+      const events = [
+        { id: "lab_ev_past", customer_id: "lab_c1", customer: "Acme Events", name: "Spring Expo", out_date: evPastStart, due_date: evPastEnd },
+        { id: "lab_ev_due", customer_id: "lab_c2", customer: "Beta Stage", name: "Club Night", out_date: evDueStart, due_date: evDueEnd },
+        { id: "lab_ev_today", customer_id: "lab_c4", customer: "Nordic Light", name: "Town Hall", out_date: evNowStart, due_date: evNowEnd },
+        { id: "lab_ev_next", customer_id: "lab_c1", customer: "Acme Events", name: "Trade Fair", out_date: evNextStart, due_date: evNextEnd },
+        { id: "lab_ev_tour", customer_id: "lab_c3", customer: "Gamma Audio", name: "Winter Tour", out_date: evTourStart, due_date: evTourEnd },
+        { id: "lab_ev_far", customer_id: "lab_c2", customer: "Beta Stage", name: "Acoustic Night", out_date: evFarStart, due_date: evFarEnd }
+      ];
+
+      const bookings = [
+        { id: "lab_bk1", device_id: "lab_d7", event_id: "lab_ev_due", customer_id: "lab_c2", customer: "Beta Stage", event: "Club Night", out_date: evDueStart, due_date: evDueEnd },
+        { id: "lab_bk2", device_id: "lab_d1", event_id: "lab_ev_today", customer_id: "lab_c4", customer: "Nordic Light", event: "Town Hall", out_date: evNowStart, due_date: evNowEnd },
+        { id: "lab_bk3", device_id: "lab_d2", event_id: "lab_ev_today", customer_id: "lab_c4", customer: "Nordic Light", event: "Town Hall", out_date: evNowStart, due_date: evNowEnd },
+        { id: "lab_bk4", device_id: "lab_d3", event_id: "lab_ev_next", customer_id: "lab_c1", customer: "Acme Events", event: "Trade Fair", out_date: evNextStart, due_date: evNextEnd },
+        { id: "lab_bk5", device_id: "lab_d6", event_id: "lab_ev_next", customer_id: "lab_c1", customer: "Acme Events", event: "Trade Fair", out_date: evNextStart, due_date: evNextEnd },
+        { id: "lab_bk6", device_id: "lab_d1", event_id: "lab_ev_tour", customer_id: "lab_c3", customer: "Gamma Audio", event: "Winter Tour", out_date: evTourStart, due_date: evTourEnd },
+        { id: "lab_bk7", device_id: "lab_d4", event_id: "lab_ev_tour", customer_id: "lab_c3", customer: "Gamma Audio", event: "Winter Tour", out_date: evTourStart, due_date: evTourEnd },
+        { id: "lab_bk8", device_id: "lab_d5", event_id: "lab_ev_tour", customer_id: "lab_c3", customer: "Gamma Audio", event: "Winter Tour", out_date: evTourStart, due_date: evTourEnd }
+      ];
+
+      return { slots, devices, customers, events, bookings };
+    }
 
     function loadStore() {
       const raw = localStorage.getItem(STORAGE_KEY);
-      let data = raw ? JSON.parse(raw) : { slots: [], devices: [], customers: [], events: [], bookings: [] };
-      const hadRaw = Boolean(raw);
+      const isFresh = !raw;
+      let data = raw ? JSON.parse(raw) : createLabSeedData();
       const hadBookings = Array.isArray(data.bookings);
       const hadEvents = Array.isArray(data.events);
       ensureEmptySlotBuffer(data);
-      if (hadRaw && (!hadBookings || !hadEvents)) {
+      if (isFresh || !hadBookings || !hadEvents) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
       }
       return data;
@@ -952,6 +1035,8 @@
     let activeDetailBookingId = null;
     let detailBaseline = {};
     let detailCurrentStatus = "office";
+    let calendarSelectedDateKey = null;
+    let calendarSelectedEventId = null;
 
     let setupWorkingStore = null;
     let setupOpenGroupIds = new Set();
@@ -978,9 +1063,10 @@
       const prevView = currentView;
       currentView = viewName;
 
-      // Handle footer visibility: only visible on Grid and List, completely hidden on Calendar, Detail, Setup
+      // Handle footer visibility: timelineFooter on Grid/List, calendarFooter on Calendar, hidden on Detail/Setup
       const timelineFooter = document.getElementById("timelineFooter");
       const timelineFooterInner = document.getElementById("timelineFooterInner");
+      const calendarFooter = document.getElementById("calendarFooter");
       if (timelineFooter) {
         if (viewName === "grid" || viewName === "list") {
           timelineFooter.classList.remove("hidden");
@@ -988,6 +1074,9 @@
         } else {
           timelineFooter.classList.add("hidden");
         }
+      }
+      if (calendarFooter) {
+        calendarFooter.classList.toggle("hidden", viewName !== "calendar");
       }
 
       ["viewGrid", "viewList", "viewCalendar", "viewDetail", "viewSetup"].forEach(id => {
@@ -1038,12 +1127,19 @@
           if (mainEl) mainEl.scrollTop = 0;
           renderListView();
         } else if (viewName === "calendar") {
+          if (prevView === "grid" || prevView === "list") {
+            const todayKey = formatDateInputValue(getTodayAnchor());
+            const selKey = formatDateInputValue(selectedDate);
+            calendarSelectedDateKey = selKey !== todayKey ? selKey : null;
+          }
           tabMonth.className = "w-[92px] h-12 rounded-xl font-bold bg-white text-[#b80000] shadow-sm transition-all cursor-pointer flex flex-col items-center justify-center whitespace-nowrap";
           updateHeaderCenterBadge();
           document.getElementById("viewCalendar").classList.remove("hidden");
           renderCalendarView();
+          renderCalendarEventFooter(true);
           scrollCalendarToDate(selectedDate, false);
           requestAnimationFrame(() => {
+            renderCalendarEventFooter(true);
             scrollCalendarToDate(selectedDate, false);
           });
         }
@@ -2998,7 +3094,7 @@
       const hh = pad(now.getHours());
       const min = pad(now.getMinutes());
       const ss = pad(now.getSeconds());
-      return `fleet_export_dev_${yyyy}${mm}${dd}_${hh}${min}${ss}`;
+      return `fleet_export_lab_${yyyy}${mm}${dd}_${hh}${min}${ss}`;
     }
 
     function clearTransferInputs() {
@@ -3136,7 +3232,7 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "fleet_reset_dev.json";
+      a.download = "fleet_reset_lab.json";
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -3219,17 +3315,128 @@
 
     function handleMonthBadgeClick() {
       if (currentView === "calendar") {
+        calendarSelectedDateKey = null;
+        calendarSelectedEventId = null;
         selectedDate = getTodayAnchor();
         updateTimelineFooter();
         renderCalendarView();
+        renderCalendarEventFooter(true);
         scrollCalendarToDate(selectedDate, false);
         requestAnimationFrame(() => {
+          renderCalendarEventFooter(true);
           scrollCalendarToDate(selectedDate, false);
         });
       } else {
         const footer = document.getElementById("timelineFooter");
         if (footer) footer.classList.add("hidden");
         switchView("calendar");
+      }
+    }
+
+    function handleCalendarDayClick(cellDate, dateKey) {
+      if (calendarSelectedDateKey === dateKey) {
+        calendarSelectedDateKey = null;
+        selectedDate = getTodayAnchor();
+      } else {
+        calendarSelectedDateKey = dateKey;
+        selectedDate = new Date(cellDate.getFullYear(), cellDate.getMonth(), cellDate.getDate());
+      }
+      updateTimelineFooter();
+      renderCalendarView();
+    }
+
+    function handleCalendarEventChipClick(evId) {
+      if (calendarSelectedEventId === evId) {
+        calendarSelectedEventId = null;
+        renderCalendarView();
+        renderCalendarEventFooter(false);
+        return;
+      }
+      calendarSelectedEventId = evId;
+      renderCalendarView();
+      renderCalendarEventFooter(false);
+      const ev = findEventById(globalStore, evId);
+      if (ev && ev.out_date) {
+        const outDt = parseDateKey(ev.out_date);
+        if (outDt) {
+          renderHeaderCalendarBadge(outDt.getFullYear(), outDt.getMonth());
+          scrollCalendarToDate(outDt, true);
+          requestAnimationFrame(() => {
+            scrollCalendarToDate(outDt, true);
+          });
+        }
+      }
+    }
+
+    function renderCalendarEventFooter(shouldCenter = false) {
+      const track = document.getElementById("calendarEventsTrack");
+      if (!track) return;
+      track.innerHTML = "";
+
+      const events = (globalStore && Array.isArray(globalStore.events)) ? globalStore.events.slice() : [];
+      events.sort((a, b) => {
+        const cmpOut = (a.out_date || "").localeCompare(b.out_date || "");
+        if (cmpOut !== 0) return cmpOut;
+        const cmpDue = (a.due_date || "").localeCompare(b.due_date || "");
+        if (cmpDue !== 0) return cmpDue;
+        const custA = getEventCustomerName(globalStore, a);
+        const custB = getEventCustomerName(globalStore, b);
+        const cmpCust = custA.localeCompare(custB, undefined, { sensitivity: "base" }) || custA.localeCompare(custB);
+        if (cmpCust !== 0) return cmpCust;
+        return (a.name || "").localeCompare(b.name || "", undefined, { sensitivity: "base" }) || (a.name || "").localeCompare(b.name || "");
+      });
+
+      if (calendarSelectedEventId && !events.some(ev => ev.id === calendarSelectedEventId)) {
+        calendarSelectedEventId = null;
+      }
+
+      if (events.length === 0) {
+        track.innerHTML = `<div class="w-full py-2.5 text-center text-xs text-[#916f69] font-medium">No events scheduled</div>`;
+        return;
+      }
+
+      const todayKey = formatDateInputValue(getTodayAnchor());
+      let centerEvent = events.find(ev => ev.out_date && ev.due_date && ev.out_date <= todayKey && todayKey <= ev.due_date);
+      if (!centerEvent) {
+        centerEvent = events.find(ev => ev.due_date && ev.due_date >= todayKey) || events[events.length - 1];
+      }
+
+      let centerChipEl = null;
+      events.forEach(ev => {
+        const isSelected = calendarSelectedEventId === ev.id;
+        const custName = getEventCustomerName(globalStore, ev);
+        const dateSpan = ev.out_date === ev.due_date
+          ? formatShortMmDd(ev.out_date)
+          : `${formatShortMmDd(ev.out_date)}–${formatShortMmDd(ev.due_date)}`;
+
+        const chip = document.createElement("button");
+        chip.type = "button";
+        chip.id = `cal_ev_chip_${ev.id}`;
+        chip.dataset.eventId = ev.id;
+        chip.onclick = () => handleCalendarEventChipClick(ev.id);
+        chip.className = isSelected
+          ? "shrink-0 px-3 py-1.5 rounded-xl bg-white text-[#b80000] shadow-sm flex flex-col items-start text-left max-w-[190px] transition-all cursor-pointer active:scale-95"
+          : "shrink-0 px-3 py-1.5 rounded-xl text-[#5d403b] hover:text-[#1b1c1c] hover:bg-white/50 flex flex-col items-start text-left max-w-[190px] transition-all cursor-pointer active:scale-95";
+        chip.innerHTML = `
+          <span class="text-xs leading-tight truncate w-full"><strong class="font-bold">${escapeHtml(ev.name)}</strong>${custName ? `<span class="opacity-70 font-medium"> &bull; ${escapeHtml(custName)}</span>` : ""}</span>
+          <span class="text-[10px] font-medium opacity-75 leading-tight mt-0.5">${dateSpan}</span>
+        `;
+        track.appendChild(chip);
+        if (centerEvent && ev.id === centerEvent.id) {
+          centerChipEl = chip;
+        }
+      });
+
+      if (shouldCenter && centerChipEl && typeof track.scrollLeft === "number") {
+        const clientW = track.clientWidth || 0;
+        const offsetW = centerChipEl.offsetWidth || 0;
+        const offsetL = centerChipEl.offsetLeft || 0;
+        const targetLeft = Math.max(0, offsetL - Math.max(0, (clientW - offsetW) / 2));
+        if (typeof track.scrollTo === "function") {
+          track.scrollTo({ left: targetLeft, behavior: "auto" });
+        } else {
+          track.scrollLeft = targetLeft;
+        }
       }
     }
 
@@ -3457,6 +3664,11 @@
         if (b.out_date) expandForDate(parseDateKey(b.out_date));
         if (b.due_date) expandForDate(parseDateKey(b.due_date));
       });
+      ((globalStore && globalStore.events) || []).forEach(ev => {
+        if (!ev) return;
+        if (ev.out_date) expandForDate(parseDateKey(ev.out_date));
+        if (ev.due_date) expandForDate(parseDateKey(ev.due_date));
+      });
 
       const alignedStartOffset = Math.floor(minDayOffset / CALENDAR_COLS) * CALENDAR_COLS;
       const startDate = new Date(baseStartDate.getFullYear(), baseStartDate.getMonth(), baseStartDate.getDate() + alignedStartOffset);
@@ -3499,6 +3711,7 @@
         return { outCount: typeOutCount, officeCount: typeOfficeCount };
       };
 
+      const activeEvent = calendarSelectedEventId ? findEventById(globalStore, calendarSelectedEventId) : null;
       const outSetsByDay = buildCalendarOutSetsByDay(globalStore, startKey, endKey, todayKey, allDeviceIdSet);
 
       for (let row = 0; row < totalRows; row++) {
@@ -3512,6 +3725,11 @@
           const totalOutCount = outSet ? outSet.size : 0;
           const isPastDate = cellDate.getTime() < today.getTime();
           const isSettledPastLook = isPastDate && totalOutCount === 0;
+          const isSelectedDay = calendarSelectedDateKey === dateKey;
+          const isEventDay = Boolean(
+            activeEvent && activeEvent.out_date && activeEvent.due_date &&
+            activeEvent.out_date <= dateKey && dateKey <= activeEvent.due_date
+          );
 
           const lzInfo = getTypeDayInfo(outSet, lzAllIds, lzActiveIds);
           const llInfo = getTypeDayInfo(outSet, llAllIds, llActiveIds);
@@ -3520,25 +3738,36 @@
           const lzSeg = getMergedSegmentCounts(lzInfo.outCount, lzInfo.officeCount);
           const llSeg = getMergedSegmentCounts(llInfo.outCount, llInfo.officeCount);
 
-          // All days (including past days) remain touchable buttons
+          // All days stay touchable; tapping toggles single-day selection on Calendar without leaving Calendar
           const cell = document.createElement("button");
           cell.type = "button";
-          cell.onclick = () => {
-            selectedDate = new Date(cellDate);
-            updateTimelineFooter();
-            switchView("grid");
-          };
+          cell.onclick = () => handleCalendarDayClick(cellDate, dateKey);
           cell.id = `cal_day_${dateKey}`;
           cell.dataset.calDate = dateKey;
+          cell.className = "relative w-full h-[58px] cursor-pointer select-none focus:outline-none";
 
+          let haloHtml = "";
+          if (isEventDay) {
+            const prevKey = addDaysToDateKey(dateKey, -1);
+            const nextKey = addDaysToDateKey(dateKey, 1);
+            const hasPrevSameRow = col > 0 && Boolean(prevKey && activeEvent.out_date <= prevKey && prevKey <= activeEvent.due_date);
+            const hasNextSameRow = col < (CALENDAR_COLS - 1) && Boolean(nextKey && activeEvent.out_date <= nextKey && nextKey <= activeEvent.due_date);
+            const leftEdgeClass = hasPrevSameRow ? "-left-[5.5px]" : "-left-[4px] rounded-l-[20px] border-l";
+            const rightEdgeClass = hasNextSameRow ? "-right-[5.5px]" : "-right-[4px] rounded-r-[20px] border-r";
+            haloHtml = `<div aria-hidden="true" class="pointer-events-none absolute -top-[4px] -bottom-[4px] ${leftEdgeClass} ${rightEdgeClass} border-y border-[#f0c7c7] bg-[#faebeb] z-0"></div>`;
+          }
+
+          let innerCardClass = "";
           if (isSettledPastLook) {
-            cell.className = "flex flex-col items-center justify-center w-full h-[58px] rounded-2xl overflow-hidden border-2 border-dashed border-[#9e9e9e] text-[#9e9e9e] hover:bg-[#f0efef] active:scale-95 transition-all select-none cursor-pointer";
+            innerCardClass = "relative z-10 flex flex-col items-center justify-center w-full h-full rounded-2xl overflow-hidden bg-[#fbf9f9] border-2 border-dashed border-[#9e9e9e] text-[#9e9e9e] hover:bg-[#f0efef] active:scale-95 transition-all";
           } else {
-            // Alternating month shades (2 light grey tones to easily distinguish months)
             const isEvenMonth = cellDate.getMonth() % 2 === 0;
             const bgClass = isEvenMonth ? "bg-[#f5f4f4]" : "bg-[#eae8e8]";
             const borderClass = isEvenMonth ? "border-[#e3e1e1]" : "border-[#dad8d8]";
-            cell.className = `flex flex-col items-center justify-center w-full h-[58px] rounded-2xl overflow-hidden border ${borderClass} ${bgClass} shadow-xs active:scale-95 transition-all cursor-pointer`;
+            innerCardClass = `relative z-10 flex flex-col items-center justify-center w-full h-full rounded-2xl overflow-hidden border ${borderClass} ${bgClass} shadow-xs active:scale-95 transition-all`;
+          }
+          if (isSelectedDay) {
+            innerCardClass += " ring-2 ring-[#1b1c1c]";
           }
 
           // Date formatting: first of month carries month number in mm/dd format (e.g. "11/01"), other dates use 2-digit day (e.g. "03")
@@ -3562,17 +3791,20 @@
           }
 
           cell.innerHTML = `
-            <!-- Upper Row: Date Number (Bold, mm/dd on 1st of month, pill-shaped red highlight) -->
-            <div class="flex items-center justify-center w-full h-[22px]">
-              <span class="${datePillClass}">
-                ${dateDisplay}
-              </span>
-            </div>
+            ${haloHtml}
+            <div class="${innerCardClass}">
+              <!-- Upper Row: Date Number (Bold, mm/dd on 1st of month, pill-shaped red highlight) -->
+              <div class="flex items-center justify-center w-full h-[22px]">
+                <span class="${datePillClass}">
+                  ${dateDisplay}
+                </span>
+              </div>
 
-            <!-- Bottom Row: Dual Stacked Status Pills (Upper = LZ, Lower = LL) -->
-            <div class="flex flex-col items-center justify-center w-full mt-1 gap-[2px]">
-              ${renderSegmentedBarHtml(lzSeg.yellowSegments, lzSeg.greenSegments, lzGrey, "h-1.5")}
-              ${renderSegmentedBarHtml(llSeg.yellowSegments, llSeg.greenSegments, llGrey, "h-1.5")}
+              <!-- Bottom Row: Dual Stacked Status Pills (Upper = LZ, Lower = LL) -->
+              <div class="flex flex-col items-center justify-center w-full mt-1 gap-[2px]">
+                ${renderSegmentedBarHtml(lzSeg.yellowSegments, lzSeg.greenSegments, lzGrey, "h-1.5")}
+                ${renderSegmentedBarHtml(llSeg.yellowSegments, llSeg.greenSegments, llGrey, "h-1.5")}
+              </div>
             </div>
           `;
 

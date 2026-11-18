@@ -267,81 +267,16 @@
 
   </main>
 
-  <!-- ==================== TIMELINE FOOTER (FIXED BOTTOM) ==================== -->
+  <!-- ==================== TIMELINE FOOTER (FIXED BOTTOM HORIZONTAL DATE CAROUSEL) ==================== -->
   <footer id="timelineFooter"
-    class="fixed bottom-0 inset-x-0 z-40 bg-[#fbf9f9] border-t border-[#e9e8e7] px-3 pt-2.5 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))] shadow-lg select-none">
-    <div id="timelineFooterInner" class="max-w-md mx-auto grid grid-cols-[38px_1fr_38px] gap-2 items-stretch">
-
-      <!-- Previous Week Button (Tall 2-measure span) -->
-      <button type="button" id="btnPrevWeek" onclick="handleMockWeekChange(-1)"
-        class="h-full bg-[#b80000] hover:bg-[#990000] active:scale-95 text-white rounded-xl flex items-center justify-center transition-all cursor-pointer shadow-sm border border-[#b80000]"
-        title="Previous Week" aria-label="Previous Week">
-        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
-          <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
-        </svg>
-      </button>
-
-      <!-- Center Content: Row 1 (7 Days) + Row 2 (Month & CW info) -->
-      <div class="flex flex-col gap-1.5 justify-center">
-
-        <!-- Row 1: 7 Weekday Buttons (Unified Pill Toggle Track) -->
-        <div class="bg-[#efeded] p-1 rounded-xl grid grid-cols-7 gap-0.5 w-full items-center" id="timelineDaysContainer">
-          <button type="button" onclick="selectMockDay(this)"
-            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg text-[#5d403b] hover:text-[#1b1c1c] active:scale-95 transition-all cursor-pointer">
-            <span class="text-[9px] font-bold uppercase tracking-wider opacity-60">Mon</span>
-            <span class="text-xs font-semibold leading-tight">03</span>
-          </button>
-          <button type="button" onclick="selectMockDay(this)"
-            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg text-[#5d403b] hover:text-[#1b1c1c] active:scale-95 transition-all cursor-pointer">
-            <span class="text-[9px] font-bold uppercase tracking-wider opacity-60">Tue</span>
-            <span class="text-xs font-semibold leading-tight">04</span>
-          </button>
-          <!-- Wednesday (Initial Active Day) -->
-          <button type="button" onclick="selectMockDay(this)"
-            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg bg-white text-[#b80000] shadow-sm active:scale-95 transition-all cursor-pointer">
-            <span class="text-[9px] font-bold uppercase tracking-wider text-[#b80000]">Wed</span>
-            <span class="text-xs font-bold leading-tight text-[#b80000]">05</span>
-          </button>
-          <button type="button" onclick="selectMockDay(this)"
-            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg text-[#5d403b] hover:text-[#1b1c1c] active:scale-95 transition-all cursor-pointer">
-            <span class="text-[9px] font-bold uppercase tracking-wider opacity-60">Thu</span>
-            <span class="text-xs font-semibold leading-tight">06</span>
-          </button>
-          <button type="button" onclick="selectMockDay(this)"
-            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg text-[#5d403b] hover:text-[#1b1c1c] active:scale-95 transition-all cursor-pointer">
-            <span class="text-[9px] font-bold uppercase tracking-wider opacity-60">Fri</span>
-            <span class="text-xs font-semibold leading-tight">07</span>
-          </button>
-          <button type="button" onclick="selectMockDay(this)"
-            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg text-[#5d403b] hover:text-[#1b1c1c] active:scale-95 transition-all cursor-pointer">
-            <span class="text-[9px] font-bold uppercase tracking-wider opacity-60">Sat</span>
-            <span class="text-xs font-semibold leading-tight">08</span>
-          </button>
-          <button type="button" onclick="selectMockDay(this)"
-            class="timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg text-[#5d403b] hover:text-[#1b1c1c] active:scale-95 transition-all cursor-pointer">
-            <span class="text-[9px] font-bold uppercase tracking-wider opacity-60">Sun</span>
-            <span class="text-xs font-semibold leading-tight">09</span>
-          </button>
-        </div>
-
-        <!-- Row 2: Year and Calendar Week (CW) Metadata -->
-        <div class="flex items-center justify-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-[#1b1c1c]">
-          <span id="timelineYearLabel">2026</span>
-          <span class="opacity-30">•</span>
-          <span id="timelineCwLabel">CW #45</span>
-        </div>
-
-      </div>
-
-      <!-- Next Week Button (Tall 2-measure span) -->
-      <button type="button" id="btnNextWeek" onclick="handleMockWeekChange(1)"
-        class="h-full bg-[#b80000] hover:bg-[#990000] active:scale-95 text-white rounded-xl flex items-center justify-center transition-all cursor-pointer shadow-sm border border-[#b80000]"
-        title="Next Week" aria-label="Next Week">
-        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
-          <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
-        </svg>
-      </button>
-
+    class="fixed bottom-0 inset-x-0 z-40 bg-[#fbf9f9] border-t border-[#e9e8e7] px-3 pt-1 pb-[calc(0.625rem+env(safe-area-inset-bottom,0px))] shadow-lg select-none">
+    <div id="timelineFooterInner" class="max-w-md mx-auto relative">
+      <!-- Stationary center snap slot cradle -->
+      <div aria-hidden="true"
+        class="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[72px] h-[72px] rounded-2xl bg-[#efeded] border border-[#dad8d8] z-0"></div>
+      <!-- Scrollable center-snapped square day badges -->
+      <div id="timelineDaysContainer"
+        class="relative z-10 h-[88px] flex items-center gap-2.5 overflow-x-auto no-scrollbar snap-x snap-mandatory"></div>
     </div>
   </footer>
 
@@ -1119,6 +1054,8 @@
           updateHeaderCenterBadge();
           document.getElementById("viewGrid").classList.remove("hidden");
           renderGridView();
+          updateTimelineFooter();
+          requestAnimationFrame(() => scrollTimelineToDate(selectedDate, false));
           if (mainEl) mainEl.scrollTop = 0;
         } else if (viewName === "list") {
           tabList.className = "px-3.5 h-7 rounded-xl text-xs font-bold bg-white text-[#b80000] shadow-sm transition-all cursor-pointer flex items-center justify-center";
@@ -1126,6 +1063,8 @@
           document.getElementById("viewList").classList.remove("hidden");
           if (mainEl) mainEl.scrollTop = 0;
           renderListView();
+          updateTimelineFooter();
+          requestAnimationFrame(() => scrollTimelineToDate(selectedDate, false));
         } else if (viewName === "calendar") {
           if (prevView === "grid" || prevView === "list") {
             const todayKey = formatDateInputValue(getTodayAnchor());
@@ -3529,67 +3468,285 @@
       return new Date(date.setDate(diff));
     }
 
-    function getCalendarWeek(d) {
-      const target = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-      const dayNr = target.getUTCDay() || 7;
-      target.setUTCDate(target.getUTCDate() + 4 - dayNr);
-      const yearStart = new Date(Date.UTC(target.getUTCFullYear(), 0, 1));
-      return Math.ceil((((target - yearStart) / 86400000) + 1) / 7);
-    }
-
     function isSameDate(d1, d2) {
       return d1.getFullYear() === d2.getFullYear() &&
              d1.getMonth() === d2.getMonth() &&
              d1.getDate() === d2.getDate();
     }
 
-    // Update Footer Week Controls & Metadata Row
-    function updateTimelineFooter() {
-      const focalMonday = getMondayOfWeek(selectedDate);
+    const CALENDAR_COLS = 5;
+    const CALENDAR_PAST_DAYS = 90; // 18 rows * 5 = 90 days (~13 weeks)
+    const CALENDAR_FUTURE_DAYS = 275; // 55 rows * 5 = 275 days (~39 weeks)
+
+    function getRollingDateRange() {
+      const today = getTodayAnchor();
+      const todayKey = formatDateInputValue(today);
+      const calendarAnchor = getMondayOfWeek(today);
+      const baseStartDate = new Date(calendarAnchor.getFullYear(), calendarAnchor.getMonth(), calendarAnchor.getDate() - CALENDAR_PAST_DAYS);
+      const baseTotalDays = CALENDAR_PAST_DAYS + CALENDAR_FUTURE_DAYS;
+
+      let minDayOffset = 0;
+      let maxDayOffset = baseTotalDays - 1;
+      const MIN_CLAMP_OFFSET = -3650;
+      const MAX_CLAMP_OFFSET = 3650;
+
+      const expandForDate = (dt) => {
+        if (!dt) return;
+        const diff = diffCalendarDaysLocal(dt, baseStartDate);
+        const clamped = Math.max(MIN_CLAMP_OFFSET, Math.min(MAX_CLAMP_OFFSET, diff));
+        if (clamped < minDayOffset) minDayOffset = clamped;
+        if (clamped > maxDayOffset) maxDayOffset = clamped;
+      };
+
+      expandForDate(selectedDate);
+      ((globalStore && globalStore.bookings) || []).forEach(b => {
+        if (!b) return;
+        if (b.out_date) expandForDate(parseDateKey(b.out_date));
+        if (b.due_date) expandForDate(parseDateKey(b.due_date));
+      });
+      ((globalStore && globalStore.events) || []).forEach(ev => {
+        if (!ev) return;
+        if (ev.out_date) expandForDate(parseDateKey(ev.out_date));
+        if (ev.due_date) expandForDate(parseDateKey(ev.due_date));
+      });
+
+      const alignedStartOffset = Math.floor(minDayOffset / CALENDAR_COLS) * CALENDAR_COLS;
+      const startDate = new Date(baseStartDate.getFullYear(), baseStartDate.getMonth(), baseStartDate.getDate() + alignedStartOffset);
+      const spanNeeded = (maxDayOffset - alignedStartOffset) + 1;
+      const totalRows = Math.ceil(spanNeeded / CALENDAR_COLS);
+      const totalDays = totalRows * CALENDAR_COLS;
+      const endDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + totalDays - 1);
+
+      return {
+        today,
+        todayKey,
+        startDate,
+        endDate,
+        totalRows,
+        totalDays,
+        startKey: formatDateInputValue(startDate),
+        endKey: formatDateInputValue(endDate)
+      };
+    }
+
+    let timelineRenderedMeta = { startKey: "", endKey: "", todayKey: "", activeKey: "" };
+    let timelineScrollRaf = null;
+    let suppressTimelineScrollSync = false;
+    let timelineProgrammaticTimer = null;
+    let timelineSnapSettleTimer = null;
+
+    function applyTimelineChipVisual(chip, dayDate, dateKey, todayKey, selectedKey) {
+      if (!chip) return;
+      const isSelected = dateKey === selectedKey;
+      const isToday = dateKey === todayKey;
+      const isPast = dateKey < todayKey;
+      const dayName = DAY_NAMES[(dayDate.getDay() + 6) % 7];
+      const isFirstOfMonth = dayDate.getDate() === 1;
+      const dPad = dayDate.getDate() < 10 ? `0${dayDate.getDate()}` : `${dayDate.getDate()}`;
+      const dateDisplay = isFirstOfMonth
+        ? `${dayDate.getMonth() + 1 < 10 ? "0" : ""}${dayDate.getMonth() + 1}/${dPad}`
+        : dPad;
+
+      let cardStateClass = "";
+      if (isSelected) {
+        cardStateClass = "bg-white border-4 border-[#b80000] shadow-sm";
+      } else if (isPast) {
+        cardStateClass = "bg-[#f9f8f8] border border-[#e9e8e7] hover:bg-[#f2f1f1]";
+      } else {
+        cardStateClass = "bg-white border border-[#e9e8e7] shadow-sm hover:border-[#d5d3d2]";
+      }
+      chip.className = `timeline-day-btn shrink-0 snap-center w-16 h-16 rounded-xl flex flex-col items-center justify-center cursor-pointer select-none transition-all active:scale-95 ${cardStateClass}`;
+
+      const weekdayColor = (isToday || isSelected)
+        ? "text-[#b80000]"
+        : (isPast ? "text-[#9e9e9e]" : "text-[#5d403b]");
+
+      let dateHtml = "";
+      if (isToday) {
+        dateHtml = `<span class="mt-1 px-2 py-0.5 rounded-full bg-[#b80000] text-white ${isFirstOfMonth ? "text-xs" : "text-sm"} font-bold leading-none">${dateDisplay}</span>`;
+      } else {
+        const numColor = isSelected ? "text-[#b80000]" : (isPast ? "text-[#9e9e9e]" : "text-[#1b1c1c]");
+        const numSize = isFirstOfMonth ? "text-sm" : "text-base";
+        dateHtml = `<span class="mt-1 ${numSize} font-bold leading-none ${numColor}">${dateDisplay}</span>`;
+      }
+
+      chip.innerHTML = `
+        <span class="text-[10px] font-bold uppercase tracking-wider leading-none ${weekdayColor}">${dayName}</span>
+        ${dateHtml}
+      `;
+    }
+
+    function scrollTimelineToDate(targetDate, smooth = false) {
+      if (!targetDate) targetDate = selectedDate;
+      const container = document.getElementById("timelineDaysContainer");
+      const dateKey = formatDateInputValue(targetDate);
+      const chip = document.getElementById(`tl_day_${dateKey}`);
+      if (!container || !chip || !container.clientWidth) return;
+
+      const targetLeft = Math.max(0, chip.offsetLeft + (chip.offsetWidth / 2) - (container.clientWidth / 2));
+      if (timelineProgrammaticTimer) {
+        clearTimeout(timelineProgrammaticTimer);
+        timelineProgrammaticTimer = null;
+      }
+      suppressTimelineScrollSync = true;
+      if (typeof container.scrollTo === "function") {
+        container.scrollTo({ left: targetLeft, behavior: smooth ? "smooth" : "auto" });
+      }
+      if (!smooth || typeof container.scrollTo !== "function") {
+        container.scrollLeft = targetLeft;
+      }
+
+      if (smooth) {
+        timelineProgrammaticTimer = setTimeout(() => {
+          suppressTimelineScrollSync = false;
+          timelineProgrammaticTimer = null;
+        }, 750);
+      } else {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            suppressTimelineScrollSync = false;
+          });
+        });
+      }
+    }
+
+    // Update Timeline Carousel & Active Center Day
+    function updateTimelineFooter(options = {}) {
+      const { smooth = false, skipScroll = false } = options;
       const container = document.getElementById("timelineDaysContainer");
       if (!container) return;
 
-      container.innerHTML = "";
-      for (let i = 0; i < 7; i++) {
-        const dayDate = new Date(focalMonday.getTime() + (i * 86400000));
-        const isSelected = isSameDate(dayDate, selectedDate);
-        const dayPad = dayDate.getDate() < 10 ? `0${dayDate.getDate()}` : `${dayDate.getDate()}`;
-        const dayName = DAY_NAMES[i];
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.onclick = () => selectDay(dayDate);
-        if (isSelected) {
-          btn.className = "timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg bg-white text-[#b80000] shadow-sm active:scale-95 transition-all cursor-pointer";
-          btn.innerHTML = `
-            <span class="text-[9px] font-bold uppercase tracking-wider text-[#b80000]">${dayName}</span>
-            <span class="text-xs font-bold leading-tight text-[#b80000]">${dayPad}</span>
-          `;
-        } else {
-          btn.className = "timeline-day-btn flex flex-col items-center justify-center py-1 rounded-lg text-[#5d403b] hover:text-[#1b1c1c] active:scale-95 transition-all cursor-pointer";
-          btn.innerHTML = `
-            <span class="text-[9px] font-bold uppercase tracking-wider opacity-60">${dayName}</span>
-            <span class="text-xs font-semibold leading-tight">${dayPad}</span>
-          `;
+      const { todayKey, startDate, totalDays, startKey, endKey } = getRollingDateRange();
+      const selectedKey = formatDateInputValue(selectedDate);
+
+      const needsRebuild = (
+        container.children.length === 0 ||
+        timelineRenderedMeta.startKey !== startKey ||
+        timelineRenderedMeta.endKey !== endKey ||
+        timelineRenderedMeta.todayKey !== todayKey
+      );
+
+      if (needsRebuild) {
+        container.innerHTML = "";
+        const startSpacer = document.createElement("div");
+        startSpacer.setAttribute("aria-hidden", "true");
+        startSpacer.className = "shrink-0 w-[calc(50%-42px)] h-1 pointer-events-none";
+        container.appendChild(startSpacer);
+
+        for (let i = 0; i < totalDays; i++) {
+          const dayDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + i);
+          const dateKey = formatDateInputValue(dayDate);
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.id = `tl_day_${dateKey}`;
+          btn.dataset.tlDate = dateKey;
+          btn.onclick = () => selectDay(dayDate, true);
+          applyTimelineChipVisual(btn, dayDate, dateKey, todayKey, selectedKey);
+          container.appendChild(btn);
         }
-        container.appendChild(btn);
+
+        const endSpacer = document.createElement("div");
+        endSpacer.setAttribute("aria-hidden", "true");
+        endSpacer.className = "shrink-0 w-[calc(50%-42px)] h-1 pointer-events-none";
+        container.appendChild(endSpacer);
+
+        timelineRenderedMeta = { startKey, endKey, todayKey, activeKey: selectedKey };
+      } else if (timelineRenderedMeta.activeKey !== selectedKey) {
+        const prevKey = timelineRenderedMeta.activeKey;
+        if (prevKey) {
+          const prevEl = document.getElementById(`tl_day_${prevKey}`);
+          const prevDate = parseDateKey(prevKey);
+          if (prevEl && prevDate) applyTimelineChipVisual(prevEl, prevDate, prevKey, todayKey, selectedKey);
+        }
+        const nextEl = document.getElementById(`tl_day_${selectedKey}`);
+        if (nextEl) applyTimelineChipVisual(nextEl, selectedDate, selectedKey, todayKey, selectedKey);
+        timelineRenderedMeta.activeKey = selectedKey;
       }
 
-      // Metadata Row (Year and CW only)
-      const yearLabel = document.getElementById("timelineYearLabel");
-      if (yearLabel) yearLabel.textContent = selectedDate.getFullYear();
-      const cwLabel = document.getElementById("timelineCwLabel");
-      if (cwLabel) {
-        const cw = getCalendarWeek(selectedDate);
-        cwLabel.textContent = `CW #${cw < 10 ? '0' + cw : cw}`;
+      if (!skipScroll) {
+        scrollTimelineToDate(selectedDate, smooth);
       }
 
       // Top Toggle Month / Date text
       updateHeaderCenterBadge();
     }
 
-    function selectDay(date) {
+    function syncTimelineCenterFromScroll() {
+      if ((currentView !== "grid" && currentView !== "list") || suppressTimelineScrollSync) return;
+      const container = document.getElementById("timelineDaysContainer");
+      if (!container || !container.clientWidth) return;
+
+      const viewCenterX = container.scrollLeft + (container.clientWidth / 2);
+      let closestChip = null;
+      let closestDist = Infinity;
+
+      const children = container.children || [];
+      for (let i = 0; i < children.length; i++) {
+        const el = children[i];
+        if (!el || !el.dataset || !el.dataset.tlDate) continue;
+        const center = el.offsetLeft + (el.offsetWidth / 2);
+        const dist = Math.abs(center - viewCenterX);
+        if (dist < closestDist) {
+          closestDist = dist;
+          closestChip = el;
+        }
+      }
+
+      if (!closestChip || !closestChip.dataset.tlDate) return;
+      const closestKey = closestChip.dataset.tlDate;
+      if (closestKey === formatDateInputValue(selectedDate)) return;
+
+      const parsed = parseDateKey(closestKey);
+      if (!parsed) return;
+      selectedDate = parsed;
+      updateTimelineFooter({ skipScroll: true });
+      if (currentView === "grid") {
+        renderGridView();
+      } else if (currentView === "list") {
+        renderListView();
+      }
+    }
+
+    function setupTimelineScrollListener() {
+      const container = document.getElementById("timelineDaysContainer");
+      if (!container) return;
+
+      const releaseSuppression = () => {
+        if (timelineProgrammaticTimer) {
+          clearTimeout(timelineProgrammaticTimer);
+          timelineProgrammaticTimer = null;
+        }
+        suppressTimelineScrollSync = false;
+      };
+
+      container.addEventListener("pointerdown", releaseSuppression, { passive: true });
+      container.addEventListener("touchstart", releaseSuppression, { passive: true });
+      container.addEventListener("wheel", releaseSuppression, { passive: true });
+
+      container.addEventListener("scroll", () => {
+        if ((currentView !== "grid" && currentView !== "list") || suppressTimelineScrollSync) return;
+        if (timelineScrollRaf) cancelAnimationFrame(timelineScrollRaf);
+        timelineScrollRaf = requestAnimationFrame(syncTimelineCenterFromScroll);
+
+        if (timelineSnapSettleTimer) clearTimeout(timelineSnapSettleTimer);
+        timelineSnapSettleTimer = setTimeout(syncTimelineCenterFromScroll, 110);
+      }, { passive: true });
+
+      container.addEventListener("scrollend", () => {
+        releaseSuppression();
+        syncTimelineCenterFromScroll();
+      }, { passive: true });
+
+      window.addEventListener("resize", () => {
+        if (currentView === "grid" || currentView === "list") {
+          scrollTimelineToDate(selectedDate, false);
+        }
+      }, { passive: true });
+    }
+
+    function selectDay(date, smoothScroll = false) {
       selectedDate = new Date(date);
-      updateTimelineFooter();
+      updateTimelineFooter({ smooth: smoothScroll });
       if (currentView === "calendar") {
         renderCalendarView();
         scrollCalendarToDate(selectedDate, false);
@@ -3599,25 +3756,6 @@
         renderListView();
       }
     }
-
-    function handleMockWeekChange(delta) {
-      const newDate = new Date(selectedDate);
-      newDate.setDate(newDate.getDate() + (delta * 7));
-      selectedDate = newDate;
-      updateTimelineFooter();
-      if (currentView === "calendar") {
-        renderCalendarView();
-        scrollCalendarToDate(selectedDate, false);
-      } else if (currentView === "grid") {
-        renderGridView();
-      } else if (currentView === "list") {
-        renderListView();
-      }
-    }
-
-    const CALENDAR_COLS = 5;
-    const CALENDAR_PAST_DAYS = 90; // 18 rows * 5 = 90 days (~13 weeks)
-    const CALENDAR_FUTURE_DAYS = 275; // 55 rows * 5 = 275 days (~39 weeks)
 
     // Calculate 5-segment merged status pill: Out + Overdue (Yellow #fbc02d) + Office (Green #2e7d32)
     function getMergedSegmentCounts(outCount, officeCount) {
@@ -3721,46 +3859,7 @@
       if (!container) return;
       container.innerHTML = "";
 
-      const today = getTodayAnchor();
-      const todayKey = formatDateInputValue(today);
-      const calendarAnchor = getMondayOfWeek(today);
-      const baseStartDate = new Date(calendarAnchor.getFullYear(), calendarAnchor.getMonth(), calendarAnchor.getDate() - CALENDAR_PAST_DAYS);
-      const baseTotalDays = CALENDAR_PAST_DAYS + CALENDAR_FUTURE_DAYS;
-
-      let minDayOffset = 0;
-      let maxDayOffset = baseTotalDays - 1;
-      const MIN_CLAMP_OFFSET = -3650;
-      const MAX_CLAMP_OFFSET = 3650;
-
-      const expandForDate = (dt) => {
-        if (!dt) return;
-        const diff = diffCalendarDaysLocal(dt, baseStartDate);
-        const clamped = Math.max(MIN_CLAMP_OFFSET, Math.min(MAX_CLAMP_OFFSET, diff));
-        if (clamped < minDayOffset) minDayOffset = clamped;
-        if (clamped > maxDayOffset) maxDayOffset = clamped;
-      };
-
-      expandForDate(selectedDate);
-      ((globalStore && globalStore.bookings) || []).forEach(b => {
-        if (!b) return;
-        if (b.out_date) expandForDate(parseDateKey(b.out_date));
-        if (b.due_date) expandForDate(parseDateKey(b.due_date));
-      });
-      ((globalStore && globalStore.events) || []).forEach(ev => {
-        if (!ev) return;
-        if (ev.out_date) expandForDate(parseDateKey(ev.out_date));
-        if (ev.due_date) expandForDate(parseDateKey(ev.due_date));
-      });
-
-      const alignedStartOffset = Math.floor(minDayOffset / CALENDAR_COLS) * CALENDAR_COLS;
-      const startDate = new Date(baseStartDate.getFullYear(), baseStartDate.getMonth(), baseStartDate.getDate() + alignedStartOffset);
-      const spanNeeded = (maxDayOffset - alignedStartOffset) + 1;
-      const totalRows = Math.ceil(spanNeeded / CALENDAR_COLS);
-      const totalDays = totalRows * CALENDAR_COLS;
-      const endDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + totalDays - 1);
-
-      const startKey = formatDateInputValue(startDate);
-      const endKey = formatDateInputValue(endDate);
+      const { today, todayKey, startDate, totalRows, startKey, endKey } = getRollingDateRange();
       const devicesList = (globalStore && Array.isArray(globalStore.devices)) ? globalStore.devices : [];
       const allDeviceIdSet = new Set(devicesList.map(d => d && d.id).filter(Boolean));
       const lzAllIds = new Set();
@@ -3967,6 +4066,7 @@
 
     // Startup Initialization
     setupCalendarScrollListener();
+    setupTimelineScrollListener();
     updateTimelineFooter();
     switchView("grid");
 

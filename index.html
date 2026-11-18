@@ -273,7 +273,7 @@
     <div id="timelineFooterInner" class="max-w-md mx-auto">
       <!-- Scrollable center-snapped day badges matching Calendar event badge frame -->
       <div id="timelineDaysContainer"
-        class="relative h-[88px] flex items-center gap-2 overflow-x-auto no-scrollbar snap-x snap-mandatory"></div>
+        class="relative h-[88px] flex items-center gap-0.5 overflow-x-auto no-scrollbar snap-x snap-mandatory"></div>
     </div>
   </footer>
 
@@ -3392,19 +3392,19 @@
           ? `<div aria-hidden="true" class="pointer-events-none absolute -inset-[4px] rounded-2xl border border-[#3f3f3f] bg-[#525252] z-0"></div>`
           : "";
         const cardClass = isPast
-          ? "w-full p-3 rounded-xl border border-[#e9e8e7] bg-[#f9f8f8] hover:bg-[#f2f1f1] flex flex-col items-start justify-center text-left transition-colors"
-          : "w-full p-3 rounded-xl border border-[#e9e8e7] bg-white shadow-sm hover:border-[#d5d3d2] flex flex-col items-start justify-center text-left transition-colors";
+          ? "w-full p-3 rounded-xl border border-[#e9e8e7] bg-[#f9f8f8] hover:bg-[#f2f1f1] flex flex-col items-center justify-center text-center transition-colors"
+          : "w-full p-3 rounded-xl border border-[#e9e8e7] bg-white shadow-sm hover:border-[#d5d3d2] flex flex-col items-center justify-center text-center transition-colors";
         const custHeaderColor = isSelected ? "text-white" : (isPast ? "text-[#9e9e9e]" : "text-[#5d403b]");
         const titleColor = isPast ? "text-[#9e9e9e]" : "text-[#1b1c1c]";
         const metaColor = isPast ? "text-[#9e9e9e]" : "text-[#5d403b]";
 
         chip.innerHTML = `
           ${outlineHtml}
-          <div class="relative z-10 w-full flex flex-col items-start transition-transform group-active:scale-95">
-            <span class="w-full px-1 text-[10px] font-bold uppercase tracking-wider leading-[11px] mb-[3px] truncate text-left ${custHeaderColor}">${custName ? escapeHtml(custName) : "&nbsp;"}</span>
+          <div class="relative z-10 w-full flex flex-col items-center transition-transform group-active:scale-95">
+            <span class="w-full px-1 text-[10px] font-bold uppercase tracking-wider leading-[11px] mb-[3px] truncate text-center ${custHeaderColor}">${custName ? escapeHtml(custName) : "&nbsp;"}</span>
             <div class="${cardClass}">
-              <span class="text-sm font-semibold ${titleColor} truncate w-full">${escapeHtml(ev.name)}</span>
-              <span class="text-xs ${metaColor} mt-0.5 whitespace-nowrap">${dateSpan}</span>
+              <span class="text-sm font-semibold ${titleColor} truncate w-full text-center">${escapeHtml(ev.name)}</span>
+              <span class="text-xs ${metaColor} mt-0.5 whitespace-nowrap text-center">${dateSpan}</span>
             </div>
           </div>
         `;
@@ -3544,9 +3544,12 @@
         ? `${dayDate.getMonth() + 1 < 10 ? "0" : ""}${dayDate.getMonth() + 1}/${dPad}`
         : dPad;
 
-      chip.className = "timeline-day-btn shrink-0 snap-center group p-[3px] rounded-2xl border border-[#3f3f3f] bg-[#525252] flex flex-col items-center cursor-pointer select-none focus:outline-none";
+      const outerFrameClass = isSelected
+        ? "border-[#3f3f3f] bg-[#525252]"
+        : "border-transparent bg-transparent";
+      chip.className = `timeline-day-btn shrink-0 snap-center group p-[3px] rounded-2xl border flex flex-col items-center cursor-pointer select-none focus:outline-none ${outerFrameClass}`;
 
-      const headerColor = (isPast && !isSelected && !isToday) ? "text-white/70" : "text-white";
+      const headerColor = isSelected ? "text-white" : (isPast ? "text-[#9e9e9e]" : "text-[#5d403b]");
       let boxStateClass = "";
       if (isSelected) {
         boxStateClass = "bg-white border-[6px] border-[#b80000] shadow-sm";
@@ -3627,7 +3630,7 @@
         container.innerHTML = "";
         const startSpacer = document.createElement("div");
         startSpacer.setAttribute("aria-hidden", "true");
-        startSpacer.className = "shrink-0 w-[calc(50%-44px)] h-1 pointer-events-none";
+        startSpacer.className = "shrink-0 w-[calc(50%-38px)] h-1 pointer-events-none";
         container.appendChild(startSpacer);
 
         for (let i = 0; i < totalDays; i++) {
@@ -3644,7 +3647,7 @@
 
         const endSpacer = document.createElement("div");
         endSpacer.setAttribute("aria-hidden", "true");
-        endSpacer.className = "shrink-0 w-[calc(50%-44px)] h-1 pointer-events-none";
+        endSpacer.className = "shrink-0 w-[calc(50%-38px)] h-1 pointer-events-none";
         container.appendChild(endSpacer);
 
         timelineRenderedMeta = { startKey, endKey, todayKey, activeKey: selectedKey };

@@ -269,7 +269,7 @@
 
   <!-- ==================== TIMELINE FOOTER (FIXED BOTTOM HORIZONTAL DATE CAROUSEL) ==================== -->
   <footer id="timelineFooter"
-    class="fixed bottom-0 inset-x-0 z-40 bg-[#fbf9f9] border-t border-[#e9e8e7] px-3 pt-1 pb-[calc(0.625rem+env(safe-area-inset-bottom,0px))] shadow-lg select-none">
+    class="fixed bottom-0 inset-x-0 z-40 bg-[#525252] border-t border-[#3f3f3f] px-3 pt-1 pb-[calc(0.625rem+env(safe-area-inset-bottom,0px))] shadow-lg select-none">
     <div id="timelineFooterInner" class="max-w-md mx-auto relative h-[88px] flex items-center">
       <!-- Dark grey strip matching Calendar event backdrop -->
       <div class="w-full h-[74px] rounded-2xl border border-[#3f3f3f] bg-[#525252] overflow-hidden">
@@ -3549,7 +3549,7 @@
 
       let cardStateClass = "";
       if (isSelected) {
-        cardStateClass = "bg-white border-4 border-[#b80000] shadow-sm";
+        cardStateClass = "bg-white border-[6px] border-[#b80000] shadow-sm";
       } else if (isPast) {
         cardStateClass = "bg-[#f9f8f8] border border-[#e9e8e7] hover:bg-[#f2f1f1]";
       } else {
@@ -3563,7 +3563,7 @@
 
       let dateHtml = "";
       if (isToday) {
-        dateHtml = `<span class="mt-1 px-2 py-0.5 rounded-full bg-[#b80000] text-white ${isFirstOfMonth ? "text-xs" : "text-sm"} font-bold leading-none">${dateDisplay}</span>`;
+        dateHtml = `<span class="mt-1 py-0.5 rounded-full bg-[#b80000] text-white ${isFirstOfMonth ? "px-1.5 text-xs" : "px-2 text-sm"} font-bold leading-none">${dateDisplay}</span>`;
       } else {
         const numColor = isSelected ? "text-[#b80000]" : (isPast ? "text-[#9e9e9e]" : "text-[#1b1c1c]");
         const numSize = isFirstOfMonth ? "text-sm" : "text-base";
